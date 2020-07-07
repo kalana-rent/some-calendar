@@ -155,8 +155,11 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
                         blackoutDates.isNotEmpty &&
                         blackoutDates.contains(currentDate) ||
                     blackoutDays != null &&
-                        blackoutDates.isNotEmpty &&
-                        blackoutDays.contains(currentDate.weekday)
+                        blackoutDays.isNotEmpty &&
+                        isBlackoutDay(currentDate) ||
+                    blackoutMonths != null &&
+                        blackoutMonths.isNotEmpty &&
+                        isBlackoutMonth(currentDate)
                 ? null
                 : () {
                     setState(() {
@@ -192,7 +195,8 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
       if (selectedDates.contains(currentDate)) {
         return Colors.white;
       } else if (blackoutDates.contains(currentDate) ||
-          isBlackoutDay(currentDate)) {
+          isBlackoutDay(currentDate) ||
+          isBlackoutMonth(currentDate)) {
         return blackoutColor != null ? blackoutColor : Colors.grey;
       } else {
         return textColor;
@@ -223,12 +227,15 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   }
 
   bool isBlackoutDay(currentDate) {
-    if (blackoutDays != null) {
-      if (blackoutDays.isNotEmpty) {
-        return blackoutDays.contains(currentDate.weekday);
-      }
-    }
+    if (blackoutDays != null) if (blackoutDays.isNotEmpty)
+      return blackoutDays.contains(currentDate.weekday);
 
+    return false;
+  }
+
+  bool isBlackoutMonth(currentDate) {
+    if (blackoutMonths != null) if (blackoutMonths.isNotEmpty)
+      return blackoutMonths.contains(currentDate.month);
     return false;
   }
 
