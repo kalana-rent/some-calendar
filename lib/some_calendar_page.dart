@@ -11,26 +11,31 @@ class SomeCalendarPage extends StatefulWidget {
   final SomeMode mode;
   final Color primaryColor;
   final Color textColor;
+  final Color blackoutColor;
 
-  SomeCalendarPage(
-      {Key key,
-      @required this.startDate,
-      @required this.lastDate,
-      this.onTapFunction,
-      this.state,
-      this.mode,
-      this.primaryColor,
-      this.textColor});
+  SomeCalendarPage({
+    Key key,
+    @required this.startDate,
+    @required this.lastDate,
+    this.onTapFunction,
+    this.state,
+    this.mode,
+    this.primaryColor,
+    this.textColor,
+    this.blackoutColor,
+  });
 
   @override
   _SomeCalendarPageState createState() => _SomeCalendarPageState(
-      startDate: startDate,
-      lastDate: lastDate,
-      onTapFunction: onTapFunction,
-      state: state,
-      mode: mode,
-      primaryColor: primaryColor,
-      textColor: textColor);
+        startDate: startDate,
+        lastDate: lastDate,
+        onTapFunction: onTapFunction,
+        state: state,
+        mode: mode,
+        primaryColor: primaryColor,
+        textColor: textColor,
+        blackoutColor: blackoutColor,
+      );
 }
 
 class _SomeCalendarPageState extends State<SomeCalendarPage> {
@@ -41,19 +46,26 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   final SomeMode mode;
   final Color primaryColor;
   final Color textColor;
+  final Color blackoutColor;
 
   int startDayOffset = 0;
   List<DateTime> selectedDates;
+  List<DateTime> blackoutDates;
   DateTime selectedDate;
+  DateTime blackoutDate;
+  List<int> blackoutDays;
+  List<int> blackoutMonths;
 
-  _SomeCalendarPageState(
-      {this.startDate,
-      this.lastDate,
-      this.onTapFunction,
-      this.state,
-      this.mode,
-      this.primaryColor,
-      this.textColor});
+  _SomeCalendarPageState({
+    this.startDate,
+    this.lastDate,
+    this.onTapFunction,
+    this.state,
+    this.mode,
+    this.primaryColor,
+    this.textColor,
+    this.blackoutColor,
+  });
 
   @override
   void initState() {
@@ -64,11 +76,17 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   Widget build(BuildContext context) {
     if (mode == SomeMode.Multi || mode == SomeMode.Range) {
       selectedDates = state.selectedDates;
+      blackoutDates = state.blackoutDates;
+      blackoutDays = state.blackoutDays;
+      blackoutMonths = state.blackoutMonths;
     } else if (mode == SomeMode.Single) {
       selectedDate = state.selectedDate;
+      blackoutDate = state.blackoutDate;
+      blackoutDays = state.blackoutDays;
+      blackoutMonths = state.blackoutMonths;
     }
     List<Widget> rows = [];
-    rows.add(SomeWeekLabel(textColor: textColor));
+    rows.add(SomeWeekLabel(textColor: textColor, blackoutColor: blackoutColor));
 
     var dateTime = Jiffy(startDate);
     for (int i = 1; i < 7; i++) {
@@ -78,7 +96,6 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         ));
         dateTime = dateTime..add(days: startDayOffset);
       } else {
-
         rows.add(Row(
             children: buildSomeCalendarDay(dateTime.dateTime, lastDate, i)));
         dateTime = dateTime..add(days: startDayOffset);
@@ -134,11 +151,18 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         child: Padding(
           padding: const EdgeInsets.all(1),
           child: InkWell(
-            onTap: () {
-              setState(() {
-                onTapFunction(currentDate);
-              });
-            },
+            onTap: blackoutDates != null &&
+                        blackoutDates.isNotEmpty &&
+                        blackoutDates.contains(currentDate) ||
+                    blackoutDays != null &&
+                        blackoutDates.isNotEmpty &&
+                        blackoutDays.contains(currentDate.weekday)
+                ? null
+                : () {
+                    setState(() {
+                      onTapFunction(currentDate);
+                    });
+                  },
             child: Container(
                 child: Padding(
               padding: const EdgeInsets.all(6),
@@ -165,9 +189,25 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
 
   Color getColor(currentDate) {
     if (mode == SomeMode.Multi || mode == SomeMode.Range) {
-      return selectedDates.contains(currentDate)
-          ? Colors.white
-          : (isWeekend(currentDate) ? textColor.withAlpha(222) : textColor);
+      if (selectedDates.contains(currentDate)) {
+        return Colors.white;
+      } else if (blackoutDates.contains(currentDate) ||
+          isBlackoutDay(currentDate)) {
+        return blackoutColor != null ? blackoutColor : Colors.grey;
+      } else {
+        return textColor;
+      }
+      // if (selectedDates.isNotEmpty && blackoutDates.isEmpty) {
+      //   return selectedDates.contains(currentDate)
+      //       ? Colors.white
+      //       : (isWeekend(currentDate) ? textColor.withAlpha(222) : textColor);
+      // } else if (selectedDates.isEmpty && blackoutDates.isNotEmpty) {
+      //   return blackoutDates.contains(currentDate)
+      //       ? Colors.white
+      //       : (isWeekend(currentDate)
+      //           ? blackoutColor.withAlpha(222)
+      //           : blackoutColor);
+      // }
     } else if (mode == SomeMode.Single) {
       return selectedDate == currentDate
           ? Colors.white
@@ -180,6 +220,16 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   bool isWeekend(currentDate) {
     return currentDate.weekday == DateTime.sunday ||
         currentDate.weekday == DateTime.saturday;
+  }
+
+  bool isBlackoutDay(currentDate) {
+    if (blackoutDays != null) {
+      if (blackoutDays.isNotEmpty) {
+        return blackoutDays.contains(currentDate.weekday);
+      }
+    }
+
+    return false;
   }
 
   Decoration getDecoration(currentDate) {

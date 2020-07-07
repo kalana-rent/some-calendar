@@ -32,11 +32,15 @@ class SomeCalendar extends StatefulWidget {
   DateTime startDate;
   DateTime lastDate;
   DateTime selectedDate;
+  DateTime blackoutDate;
   List<DateTime> selectedDates;
   List<DateTime> blackoutDates;
+  List<int> blackoutDays;
+  List<int> blackoutMonths;
   final Axis scrollDirection;
   final Color primaryColor;
   final Color textColor;
+  final Color blackoutColor;
   final bool isWithoutDialog;
 
   final Labels labels;
@@ -48,10 +52,14 @@ class SomeCalendar extends StatefulWidget {
       this.lastDate,
       this.done,
       this.selectedDate,
+      this.blackoutDate,
       this.selectedDates,
       this.blackoutDates,
+      this.blackoutDays,
+      this.blackoutMonths,
       this.primaryColor,
       this.textColor,
+      this.blackoutColor,
       this.isWithoutDialog,
       this.labels,
       this.scrollDirection}) {
@@ -73,9 +81,13 @@ class SomeCalendar extends StatefulWidget {
       mode: mode,
       done: done,
       textColor: textColor,
+      blackoutColor: blackoutColor,
       selectedDates: selectedDates,
       selectedDate: selectedDate,
+      blackoutDate: blackoutDate,
       blackoutDates: blackoutDates,
+      blackoutDays: blackoutDays,
+      blackoutMonths: blackoutMonths,
       primaryColor: primaryColor,
       isWithoutDialog: isWithoutDialog,
       labels: labels,
@@ -109,14 +121,18 @@ class SomeCalendarState extends State<SomeCalendar> {
 
   List<DateTime> selectedDates;
   DateTime selectedDate;
+  DateTime blackoutDate;
   DateTime firstRangeDate;
   DateTime endRangeDate;
   List<DateTime> blackoutDates;
+  List<int> blackoutDays;
+  List<int> blackoutMonths;
 
   DateTime now;
   bool isSelectedModeFirstDateRange;
   Color primaryColor;
   Color textColor;
+  Color blackoutColor;
   bool isWithoutDialog;
   Axis scrollDirection;
 
@@ -127,11 +143,15 @@ class SomeCalendarState extends State<SomeCalendar> {
       this.startDate,
       this.lastDate,
       this.selectedDate,
+      this.blackoutDate,
       this.selectedDates,
       this.blackoutDates,
+      this.blackoutDays,
+      this.blackoutMonths,
       this.mode,
       this.primaryColor,
       this.textColor,
+      this.blackoutColor,
       this.isWithoutDialog,
       this.labels,
       this.scrollDirection}) {
@@ -162,8 +182,12 @@ class SomeCalendarState extends State<SomeCalendar> {
       blackoutDates.clear();
       blackoutDates.addAll(tempListDates);
     }
+    // } else {
+    //   blackoutDate = SomeUtils.setToMidnight(blackoutDate);
+    // }
 
     if (textColor == null) textColor = Colors.black;
+    if (blackoutColor == null) blackoutColor = Colors.grey;
     if (primaryColor == null) primaryColor = Color(0xff365535);
     if (mode == SomeMode.Range) {
       if (selectedDates == null) {
@@ -262,6 +286,7 @@ class SomeCalendarState extends State<SomeCalendar> {
           mode: mode,
           primaryColor: primaryColor,
           textColor: textColor,
+          blackoutColor: blackoutColor,
         ));
       },
     );

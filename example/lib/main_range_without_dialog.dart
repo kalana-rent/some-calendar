@@ -10,6 +10,25 @@ class MainRangeWithoutDialog extends StatefulWidget {
 class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
   DateTime selectedDate = DateTime.now();
   List<DateTime> selectedDates = List();
+  List<DateTime> blackoutDates = [
+    DateTime.parse('2020-07-09'),
+    DateTime.parse('2020-07-10'),
+    DateTime.parse('2020-07-11'),
+  ];
+  List<int> blackoutDays = [
+    2,
+    3,
+    4,
+    5,
+  ];
+  List<int> blackoutMonths = [
+    1,
+    2,
+    3,
+    10,
+    11,
+    12,
+  ];
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -31,6 +50,9 @@ class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
                   mode: SomeMode.Range,
                   isWithoutDialog: true,
                   selectedDates: selectedDates,
+                  blackoutDates: blackoutDates,
+                  blackoutDays: blackoutDays,
+                  blackoutMonths: blackoutMonths,
                   startDate: Jiffy().subtract(years: 3),
                   lastDate: Jiffy().add(months: 9),
                   done: (date) {
