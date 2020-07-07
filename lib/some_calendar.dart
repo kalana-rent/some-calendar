@@ -35,6 +35,7 @@ class SomeCalendar extends StatefulWidget {
   DateTime blackoutDate;
   List<DateTime> selectedDates;
   List<DateTime> blackoutDates;
+  List<DateTime> purchasedDates;
   List<int> blackoutDays;
   List<int> blackoutMonths;
   final Axis scrollDirection;
@@ -55,6 +56,7 @@ class SomeCalendar extends StatefulWidget {
       this.blackoutDate,
       this.selectedDates,
       this.blackoutDates,
+      this.purchasedDates,
       this.blackoutDays,
       this.blackoutMonths,
       this.primaryColor,
@@ -69,6 +71,7 @@ class SomeCalendar extends StatefulWidget {
     if (lastDate == null) lastDate = SomeUtils.getLastDateDefault();
     if (selectedDates == null) selectedDates = List();
     if (blackoutDates == null) blackoutDates = List();
+    if (purchasedDates == null) purchasedDates = List();
     if (selectedDate == null) {
       selectedDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
     }
@@ -86,6 +89,7 @@ class SomeCalendar extends StatefulWidget {
       selectedDate: selectedDate,
       blackoutDate: blackoutDate,
       blackoutDates: blackoutDates,
+      purchasedDates: purchasedDates,
       blackoutDays: blackoutDays,
       blackoutMonths: blackoutMonths,
       primaryColor: primaryColor,
@@ -125,6 +129,7 @@ class SomeCalendarState extends State<SomeCalendar> {
   DateTime firstRangeDate;
   DateTime endRangeDate;
   List<DateTime> blackoutDates;
+  List<DateTime> purchasedDates;
   List<int> blackoutDays;
   List<int> blackoutMonths;
 
@@ -146,6 +151,7 @@ class SomeCalendarState extends State<SomeCalendar> {
       this.blackoutDate,
       this.selectedDates,
       this.blackoutDates,
+      this.purchasedDates,
       this.blackoutDays,
       this.blackoutMonths,
       this.mode,
@@ -181,6 +187,15 @@ class SomeCalendarState extends State<SomeCalendar> {
       }
       blackoutDates.clear();
       blackoutDates.addAll(tempListDates);
+    }
+
+    if (purchasedDates.length > 0) {
+      List<DateTime> tempListDates = List();
+      for (var value in purchasedDates) {
+        tempListDates.add(SomeUtils.setToMidnight(value));
+      }
+      purchasedDates.clear();
+      purchasedDates.addAll(tempListDates);
     }
     // } else {
     //   blackoutDate = SomeUtils.setToMidnight(blackoutDate);

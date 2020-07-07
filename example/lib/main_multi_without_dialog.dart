@@ -15,6 +15,13 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
     DateTime.parse('2020-07-10'),
     DateTime.parse('2020-07-11'),
   ];
+  List<DateTime> purchasedDates = [
+    DateTime.parse('2020-07-15'),
+    DateTime.parse('2020-07-18'),
+    DateTime.parse('2020-07-23'),
+    DateTime.parse('2020-07-24'),
+    DateTime.parse('2020-07-25'),
+  ];
   List<int> blackoutDays = [
     1,
     7,
@@ -51,6 +58,7 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
                   blackoutDates: blackoutDates,
                   blackoutDays: blackoutDays,
                   blackoutMonths: blackoutMonths,
+                  purchasedDates: purchasedDates,
                   startDate: Jiffy().subtract(years: 3),
                   lastDate: Jiffy().add(months: 9),
                   done: (date) {

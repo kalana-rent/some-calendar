@@ -51,6 +51,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   int startDayOffset = 0;
   List<DateTime> selectedDates;
   List<DateTime> blackoutDates;
+  List<DateTime> purchasedDates;
   DateTime selectedDate;
   DateTime blackoutDate;
   List<int> blackoutDays;
@@ -79,11 +80,13 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
       blackoutDates = state.blackoutDates;
       blackoutDays = state.blackoutDays;
       blackoutMonths = state.blackoutMonths;
+      purchasedDates = state.purchasedDates;
     } else if (mode == SomeMode.Single) {
       selectedDate = state.selectedDate;
       blackoutDate = state.blackoutDate;
       blackoutDays = state.blackoutDays;
       blackoutMonths = state.blackoutMonths;
+      purchasedDates = state.purchasedDates;
     }
     List<Widget> rows = [];
     rows.add(SomeWeekLabel(textColor: textColor, blackoutColor: blackoutColor));
@@ -159,7 +162,10 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
                         isBlackoutDay(currentDate) ||
                     blackoutMonths != null &&
                         blackoutMonths.isNotEmpty &&
-                        isBlackoutMonth(currentDate)
+                        isBlackoutMonth(currentDate) ||
+                    purchasedDates != null &&
+                        purchasedDates.isNotEmpty &&
+                        isPurchasedDay(currentDate)
                 ? null
                 : () {
                     setState(() {
@@ -196,7 +202,8 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         return Colors.white;
       } else if (blackoutDates.contains(currentDate) ||
           isBlackoutDay(currentDate) ||
-          isBlackoutMonth(currentDate)) {
+          isBlackoutMonth(currentDate) ||
+          isPurchasedDay(currentDate)) {
         return blackoutColor != null ? blackoutColor : Colors.grey;
       } else {
         return textColor;
@@ -236,6 +243,12 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   bool isBlackoutMonth(currentDate) {
     if (blackoutMonths != null) if (blackoutMonths.isNotEmpty)
       return blackoutMonths.contains(currentDate.month);
+    return false;
+  }
+
+  bool isPurchasedDay(currentDate) {
+    if (purchasedDates != null) if (purchasedDates.isNotEmpty)
+      return purchasedDates.contains(currentDate);
     return false;
   }
 
