@@ -32,10 +32,8 @@ class SomeCalendar extends StatefulWidget {
   DateTime startDate;
   DateTime lastDate;
   DateTime selectedDate;
-  DateTime blackoutDate;
   List<DateTime> selectedDates;
   List<DateTime> blackoutDates;
-  List<DateTime> purchasedDates;
   List<int> blackoutDays;
   List<int> blackoutMonths;
   final Axis scrollDirection;
@@ -54,12 +52,10 @@ class SomeCalendar extends StatefulWidget {
     this.lastDate,
     this.done,
     this.selectedDate,
-    this.blackoutDate,
-    this.selectedDates,
-    this.blackoutDates,
-    this.purchasedDates,
-    this.blackoutDays,
-    this.blackoutMonths,
+    this.selectedDates, // Used for selection, of blackout dates and desired purchase dates
+    this.blackoutDates, // Used as input only
+    this.blackoutDays, // Days of the week to blackout
+    this.blackoutMonths, // Months to blackout every year
     this.primaryColor,
     this.textColor,
     this.blackoutColor,
@@ -74,7 +70,6 @@ class SomeCalendar extends StatefulWidget {
     if (lastDate == null) lastDate = SomeUtils.getLastDateDefault();
     if (selectedDates == null) selectedDates = List();
     if (blackoutDates == null) blackoutDates = List();
-    if (purchasedDates == null) purchasedDates = List();
     if (selectedDate == null) {
       selectedDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
     }
@@ -90,9 +85,7 @@ class SomeCalendar extends StatefulWidget {
         blackoutColor: blackoutColor,
         selectedDates: selectedDates,
         selectedDate: selectedDate,
-        blackoutDate: blackoutDate,
         blackoutDates: blackoutDates,
-        purchasedDates: purchasedDates,
         blackoutDays: blackoutDays,
         blackoutMonths: blackoutMonths,
         primaryColor: primaryColor,
@@ -130,11 +123,9 @@ class SomeCalendarState extends State<SomeCalendar> {
 
   List<DateTime> selectedDates;
   DateTime selectedDate;
-  DateTime blackoutDate;
   DateTime firstRangeDate;
   DateTime endRangeDate;
   List<DateTime> blackoutDates;
-  List<DateTime> purchasedDates;
   List<int> blackoutDays;
   List<int> blackoutMonths;
 
@@ -154,10 +145,8 @@ class SomeCalendarState extends State<SomeCalendar> {
     this.startDate,
     this.lastDate,
     this.selectedDate,
-    this.blackoutDate,
     this.selectedDates,
     this.blackoutDates,
-    this.purchasedDates,
     this.blackoutDays,
     this.blackoutMonths,
     this.mode,
@@ -170,10 +159,8 @@ class SomeCalendarState extends State<SomeCalendar> {
     this.isBlackout,
   }) {
     now = Jiffy().dateTime;
-
     if (scrollDirection == null) scrollDirection = Axis.vertical;
     if (isWithoutDialog == null) isWithoutDialog = true;
-    print(labels.toString());
     if (labels == null) labels = new Labels();
     if (mode == SomeMode.Multi || mode == SomeMode.Range) {
       if (selectedDates.length > 0) {
@@ -205,14 +192,6 @@ class SomeCalendarState extends State<SomeCalendar> {
       blackoutDates.addAll(tempListDates);
     }
 
-    if (purchasedDates.length > 0) {
-      List<DateTime> tempListDates = List();
-      for (var value in purchasedDates) {
-        tempListDates.add(SomeUtils.setToMidnight(value));
-      }
-      purchasedDates.clear();
-      purchasedDates.addAll(tempListDates);
-    }
     // } else {
     //   blackoutDate = SomeUtils.setToMidnight(blackoutDate);
     // }
@@ -341,6 +320,7 @@ class SomeCalendarState extends State<SomeCalendar> {
           startDate: someDateRange.startDate,
           lastDate: someDateRange.endDate,
           onTapFunction: onCallback,
+          onTapDayOfWeek: dayOfWeekCallback,
           state: SomeCalendar.of(context),
           mode: mode,
           primaryColor: primaryColor,
@@ -382,8 +362,7 @@ class SomeCalendarState extends State<SomeCalendar> {
         return a.compareTo(b);
       });
       if (isWithoutDialog) {
-        if (widget.isBlackout) blackoutDates = selectedDates;
-        done(!widget.isBlackout ? selectedDates : blackoutDates);
+        done(selectedDates);
       }
     } else if (mode == SomeMode.Single) {
       selectedDate = a;
@@ -392,8 +371,7 @@ class SomeCalendarState extends State<SomeCalendar> {
         monthFirstDate = Jiffy(selectedDate).format("MMM");
         yearFirstDate = Jiffy(selectedDate).format("yyyy");
         if (isWithoutDialog) {
-          if (widget.isBlackout) blackoutDate = selectedDate;
-          done(!widget.isBlackout ? selectedDate : blackoutDate);
+          done(selectedDate);
         }
       });
     } else {
@@ -427,6 +405,18 @@ class SomeCalendarState extends State<SomeCalendar> {
         if (widget.isBlackout) blackoutDates = selectedDates;
         done(!widget.isBlackout ? selectedDates : blackoutDates);
       }
+    }
+  }
+
+  void dayOfWeekCallback(int dayOfWeek) {
+    if (blackoutDays.contains(dayOfWeek)) {
+      setState(() {
+        blackoutDays.remove(dayOfWeek);
+      });
+    } else {
+      setState(() {
+        blackoutDays.add(dayOfWeek);
+      });
     }
   }
 

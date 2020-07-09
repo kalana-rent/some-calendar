@@ -59,7 +59,6 @@ class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
                   blackoutDates: blackoutDates,
                   blackoutDays: blackoutDays,
                   blackoutMonths: blackoutMonths,
-                  purchasedDates: purchasedDates,
                   startDate: Jiffy().subtract(years: 3),
                   lastDate: Jiffy().add(months: 9),
                   isBlackout: isBlackout,

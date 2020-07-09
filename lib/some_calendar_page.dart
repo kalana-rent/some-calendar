@@ -7,6 +7,7 @@ class SomeCalendarPage extends StatefulWidget {
   final DateTime startDate;
   final DateTime lastDate;
   final OnTapFunction onTapFunction;
+  final Function onTapDayOfWeek;
   final SomeCalendarState state;
   final SomeMode mode;
   final Color primaryColor;
@@ -18,6 +19,7 @@ class SomeCalendarPage extends StatefulWidget {
     @required this.startDate,
     @required this.lastDate,
     this.onTapFunction,
+    this.onTapDayOfWeek,
     this.state,
     this.mode,
     this.primaryColor,
@@ -30,6 +32,7 @@ class SomeCalendarPage extends StatefulWidget {
         startDate: startDate,
         lastDate: lastDate,
         onTapFunction: onTapFunction,
+        onTapDayOfWeek: onTapDayOfWeek,
         state: state,
         mode: mode,
         primaryColor: primaryColor,
@@ -42,6 +45,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   final DateTime startDate;
   final DateTime lastDate;
   final OnTapFunction onTapFunction;
+  final Function onTapDayOfWeek;
   final SomeCalendarState state;
   final SomeMode mode;
   final Color primaryColor;
@@ -51,9 +55,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   int startDayOffset = 0;
   List<DateTime> selectedDates;
   List<DateTime> blackoutDates;
-  List<DateTime> purchasedDates;
   DateTime selectedDate;
-  DateTime blackoutDate;
   List<int> blackoutDays;
   List<int> blackoutMonths;
 
@@ -61,6 +63,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
     this.startDate,
     this.lastDate,
     this.onTapFunction,
+    this.onTapDayOfWeek,
     this.state,
     this.mode,
     this.primaryColor,
@@ -80,16 +83,19 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
       blackoutDates = state.blackoutDates;
       blackoutDays = state.blackoutDays;
       blackoutMonths = state.blackoutMonths;
-      purchasedDates = state.purchasedDates;
     } else if (mode == SomeMode.Single) {
       selectedDate = state.selectedDate;
-      blackoutDate = state.blackoutDate;
       blackoutDays = state.blackoutDays;
       blackoutMonths = state.blackoutMonths;
-      purchasedDates = state.purchasedDates;
     }
     List<Widget> rows = [];
-    rows.add(SomeWeekLabel(textColor: textColor, blackoutColor: blackoutColor));
+    rows.add(
+      SomeWeekLabel(
+        onTapDayOfWeek: onTapDayOfWeek,
+        textColor: textColor,
+        blackoutColor: blackoutColor,
+      ),
+    );
 
     var dateTime = Jiffy(startDate);
     for (int i = 1; i < 7; i++) {
@@ -166,10 +172,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
                         isBlackoutDay(currentDate) ||
                     blackoutMonths != null &&
                         blackoutMonths.isNotEmpty &&
-                        isBlackoutMonth(currentDate) ||
-                    purchasedDates != null &&
-                        purchasedDates.isNotEmpty &&
-                        isPurchasedDay(currentDate)
+                        isBlackoutMonth(currentDate)
                 ? null
                 : () {
                     setState(() {
@@ -206,8 +209,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         return Colors.white;
       } else if (blackoutDates.contains(currentDate) ||
           isBlackoutDay(currentDate) ||
-          isBlackoutMonth(currentDate) ||
-          isPurchasedDay(currentDate)) {
+          isBlackoutMonth(currentDate)) {
         return blackoutColor != null ? blackoutColor : Colors.grey;
       } else {
         return textColor;
@@ -247,12 +249,6 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   bool isBlackoutMonth(currentDate) {
     if (blackoutMonths != null) if (blackoutMonths.isNotEmpty)
       return blackoutMonths.contains(currentDate.month);
-    return false;
-  }
-
-  bool isPurchasedDay(currentDate) {
-    if (purchasedDates != null) if (purchasedDates.isNotEmpty)
-      return purchasedDates.contains(currentDate);
     return false;
   }
 

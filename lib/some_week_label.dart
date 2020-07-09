@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class SomeWeekLabel extends StatelessWidget {
+  final Function onTapDayOfWeek;
   final Color textColor;
   final Color blackoutColor;
   final int firstDayOfWeek;
@@ -9,18 +10,25 @@ class SomeWeekLabel extends StatelessWidget {
 
   const SomeWeekLabel(
       {Key key,
+      this.onTapDayOfWeek,
       this.textColor,
       this.blackoutColor,
       this.firstDayOfWeek = 0,
       this.blackout = false})
       : super(key: key);
 
-  Widget _weekdayContainer(String weekDayName, TextStyle textStyle) {
+  Widget _weekdayContainer(
+      String weekDayName, TextStyle textStyle, int dayOfWeek) {
     return Expanded(
-      child: Text(
-        weekDayName.replaceAll('.', ''),
-        textAlign: TextAlign.center,
-        style: textStyle,
+      child: InkWell(
+        onTap: () {
+          print(dayOfWeek);
+        },
+        child: Text(
+          weekDayName.replaceAll('.', ''),
+          textAlign: TextAlign.center,
+          style: textStyle,
+        ),
       ),
     );
   }
@@ -44,7 +52,7 @@ class SomeWeekLabel extends StatelessWidget {
         count < 7;
         i = (i + 1) % 7, count++) {
       list.add(_weekdayContainer(
-          _localeDate.dateSymbols.STANDALONESHORTWEEKDAYS[i], textStyle));
+          _localeDate.dateSymbols.STANDALONESHORTWEEKDAYS[i], textStyle, i));
     }
 
     return Row(children: list);
