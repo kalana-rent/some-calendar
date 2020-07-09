@@ -97,7 +97,11 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         rows.add(Row(
           children: buildSomeCalendarDay(dateTime.dateTime, lastDate, i),
         ));
+        var tempTime = dateTime;
         dateTime = dateTime..add(days: startDayOffset);
+        if (dateTime.dateTime.day == tempTime.dateTime.day) {
+          dateTime = dateTime..add(hours: 1);
+        }
       } else {
         rows.add(Row(
             children: buildSomeCalendarDay(dateTime.dateTime, lastDate, i)));
