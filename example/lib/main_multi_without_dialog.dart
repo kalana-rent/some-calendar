@@ -35,6 +35,8 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
     12,
   ];
 
+  bool isBlackout = true;
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -61,10 +63,16 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
                   purchasedDates: purchasedDates,
                   startDate: Jiffy().subtract(years: 3),
                   lastDate: Jiffy().add(months: 9),
+                  isBlackout: isBlackout,
                   done: (date) {
                     setState(() {
-                      selectedDates = date;
-                      showSnackbar(selectedDates.toString());
+                      if (!isBlackout) {
+                        selectedDates = date;
+                        showSnackbar(selectedDates.toString());
+                      } else {
+                        blackoutDates = date;
+                        showSnackbar('blackout dates: $blackoutDates');
+                      }
                     });
                   },
                 ),
