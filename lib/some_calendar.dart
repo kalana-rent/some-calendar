@@ -690,6 +690,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                       if (mode == SomeMode.Multi || mode == SomeMode.Range) {
                         if (isBlackout) blackoutDates = selectedDates;
                         done(isBlackout ? blackoutDates : selectedDates);
+                        blackoutDates.clear();
                       } else if (mode == SomeMode.Single) {
                         done(selectedDate);
                       }
