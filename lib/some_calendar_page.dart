@@ -107,7 +107,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         ));
         var tempTime = dateTime;
         dateTime = dateTime..add(days: startDayOffset);
-        if (dateTime.dateTime.day == tempTime.dateTime.day) {
+        if (dateTime.dateTime.day == tempTime.dateTime.day && dateTime.dateTime.hour == 23) {
           dateTime = dateTime..add(hours: 1);
         }
       } else {
@@ -268,18 +268,32 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
       return selectedDates.contains(currentDate) ? decoration : null;
     } else if (mode == SomeMode.Single) {
       return selectedDate == currentDate ? decoration : null;
-    } else {
+    } else if (selectedDates != null && selectedDates.length > 0) {
       if (selectedDates[0] == currentDate) {
-        return BoxDecoration(
+        if (selectedDates.length == 1) {
+          return BoxDecoration(
+            color: primaryColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(50),
+            ),
+          );
+        } else {
+          return BoxDecoration(
             color: primaryColor,
             borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(50), topLeft: Radius.circular(50)));
+              bottomLeft: Radius.circular(50),
+              topLeft: Radius.circular(50),
+            ),
+          );
+        }
       } else if (selectedDates[selectedDates.length - 1] == currentDate) {
         return BoxDecoration(
-            color: primaryColor,
-            borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(50),
-                topRight: Radius.circular(50)));
+          color: primaryColor,
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(50),
+            topRight: Radius.circular(50),
+          ),
+        );
       } else {
         if (selectedDates.contains(currentDate)) {
           return BoxDecoration(
@@ -290,6 +304,8 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
           return null;
         }
       }
+    } else {
+      return null;
     }
   }
 }

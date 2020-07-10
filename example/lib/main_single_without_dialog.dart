@@ -39,16 +39,14 @@ class _MainSingleWithoutDialogState extends State<MainSingleWithoutDialog> {
                   done: (selectedDates, blackoutDates, blackoutDays,
                       blackoutMonths) {
                     setState(() {
-                      setState(() {
-                        selectedDates = selectedDates;
-                        blackoutDates = blackoutDates;
-                        blackoutDays = blackoutDays;
-                        blackoutMonths = blackoutMonths;
-                        print(selectedDates);
-                        print(blackoutDates);
-                        print(blackoutDays);
-                        print(blackoutMonths);
-                      });
+                      selectedDates = selectedDates;
+                      blackoutDates = blackoutDates;
+                      blackoutDays = blackoutDays;
+                      blackoutMonths = blackoutMonths;
+                      print(selectedDates);
+                      print(blackoutDates);
+                      print(blackoutDays);
+                      print(blackoutMonths);
                     });
                   },
                 ),

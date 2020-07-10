@@ -131,7 +131,6 @@ class SomeCalendarState extends State<SomeCalendar> {
   List<int> blackoutMonths;
 
   DateTime now;
-  bool isSelectedModeFirstDateRange;
   Color primaryColor;
   Color textColor;
   Color blackoutColor;
@@ -174,18 +173,9 @@ class SomeCalendarState extends State<SomeCalendar> {
         selectedDates.clear();
         selectedDates.addAll(tempListDates);
       }
-      if (blackoutDates.length > 0) {
-        List<DateTime> tempListDates = List();
-        for (var value in blackoutDates) {
-          tempListDates.add(SomeUtils.setToMidnight(value));
-        }
-        blackoutDates.clear();
-        blackoutDates.addAll(tempListDates);
-      }
     } else {
       selectedDate = SomeUtils.setToMidnight(selectedDate);
     }
-
     if (blackoutDates.length > 0) {
       List<DateTime> tempListDates = List();
       for (var value in blackoutDates) {
@@ -201,14 +191,13 @@ class SomeCalendarState extends State<SomeCalendar> {
     if (mode == SomeMode.Range) {
       if (selectedDates == null) {
         firstRangeDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-        endRangeDate =
-            Jiffy(DateTime(now.year, now.month, now.day)).add(days: 2);
+        endRangeDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
       } else {
         DateTime dateRange = now;
         if (selectedDates.length > 0) {
           dateRange = selectedDates[0];
         }
-        if (dateRange.difference(startDate).inDays >= 0) {
+        if (dateRange.difference(startDate).inDays > 0) {
           if (selectedDates.length > 0) {
             firstRangeDate = Jiffy(selectedDates[0]).dateTime;
             endRangeDate =
@@ -219,6 +208,10 @@ class SomeCalendarState extends State<SomeCalendar> {
             endRangeDate =
                 Jiffy(DateTime(now.year, now.month, now.day)).add(days: 2);
           }
+        } else if (dateRange.difference(startDate).inDays == 0) {
+          // firstRangeDate =
+          //     Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
+          // endRangeDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
         } else {
           firstRangeDate =
               Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
@@ -226,36 +219,6 @@ class SomeCalendarState extends State<SomeCalendar> {
               Jiffy(DateTime(now.year, now.month, now.day)).add(days: 2);
         }
       }
-
-      if (blackoutDates == null) {
-        firstRangeDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-        endRangeDate =
-            Jiffy(DateTime(now.year, now.month, now.day)).add(days: 2);
-      } else {
-        DateTime dateRange = now;
-        if (blackoutDates.length > 0) {
-          dateRange = blackoutDates[0];
-        }
-        if (dateRange.difference(startDate).inDays >= 0) {
-          if (blackoutDates.length > 0) {
-            firstRangeDate = Jiffy(blackoutDates[0]).dateTime;
-            endRangeDate =
-                Jiffy(blackoutDates[blackoutDates.length - 1]).dateTime;
-          } else {
-            firstRangeDate =
-                Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-            endRangeDate =
-                Jiffy(DateTime(now.year, now.month, now.day)).add(days: 2);
-          }
-        } else {
-          firstRangeDate =
-              Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-          endRangeDate =
-              Jiffy(DateTime(now.year, now.month, now.day)).add(days: 2);
-        }
-      }
-
-      isSelectedModeFirstDateRange = true;
       dateFirstDate = Jiffy(firstRangeDate).format("dd");
       monthFirstDate = Jiffy(firstRangeDate).format("MMM");
       yearFirstDate = Jiffy(firstRangeDate).format("yyyy");
@@ -377,18 +340,25 @@ class SomeCalendarState extends State<SomeCalendar> {
         }
       });
     } else {
-      if (isSelectedModeFirstDateRange) {
-        if (a.isBefore(endRangeDate)) {
+      if (endRangeDate == null && firstRangeDate == null) {
+        endRangeDate = a;
+        firstRangeDate = a;
+      } else if (endRangeDate.isAtSameMomentAs(firstRangeDate)) {
+        if (endRangeDate.isAfter(a)) {
           firstRangeDate = a;
         } else {
           endRangeDate = a;
         }
+      } else if (endRangeDate.isAtSameMomentAs(a) ||
+          firstRangeDate.isAtSameMomentAs(a) &&
+              (endRangeDate.day - firstRangeDate.day).abs() == 1) {
+        endRangeDate = a;
+        firstRangeDate = a;
+      } else if ((endRangeDate.day - a.day).abs() >
+          (firstRangeDate.day - a.day).abs()) {
+        firstRangeDate = a;
       } else {
-        if (a.isBefore(firstRangeDate)) {
-          firstRangeDate = a;
-        } else {
-          endRangeDate = a;
-        }
+        endRangeDate = a;
       }
       selectedDates.clear();
       generateListDateRange();
@@ -435,11 +405,13 @@ class SomeCalendarState extends State<SomeCalendar> {
   }
 
   void generateListDateRange() {
-    var diff = endRangeDate.difference(firstRangeDate).inDays + 1;
-    var date = firstRangeDate;
-    for (int i = 0; i < diff; i++) {
-      selectedDates.add(date);
-      date = Jiffy(date).add(days: 1);
+    if (firstRangeDate != null && endRangeDate != null) {
+      var diff = endRangeDate.difference(firstRangeDate).inDays + 1;
+      var date = firstRangeDate;
+      for (int i = 0; i < diff; i++) {
+        selectedDates.add(date);
+        date = Jiffy(date).add(days: 1);
+      }
     }
   }
 
@@ -581,11 +553,6 @@ class SomeCalendarState extends State<SomeCalendar> {
                 if (mode == SomeMode.Range) ...[
                   Expanded(
                     child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          isSelectedModeFirstDateRange = true;
-                        });
-                      },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -603,9 +570,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                             "$dateFirstDate $monthFirstDate, $yearFirstDate",
                             style: TextStyle(
                                 fontFamily: "playfair-regular",
-                                color: isSelectedModeFirstDateRange
-                                    ? textColor
-                                    : textColor.withAlpha(150),
+                                color: textColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18),
                           ),
@@ -615,11 +580,6 @@ class SomeCalendarState extends State<SomeCalendar> {
                   ),
                   Expanded(
                     child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          isSelectedModeFirstDateRange = false;
-                        });
-                      },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -637,9 +597,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                             "$dateEndDate $monthEndDate, $yearEndDate",
                             style: TextStyle(
                                 fontFamily: "playfair-regular",
-                                color: isSelectedModeFirstDateRange
-                                    ? textColor.withAlpha(150)
-                                    : textColor,
+                                color: textColor.withAlpha(150),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18),
                           ),
@@ -749,7 +707,6 @@ class SomeCalendarState extends State<SomeCalendar> {
                     ),
                     onPressed: () {
                       if (mode == SomeMode.Multi || mode == SomeMode.Range) {
-                        if (isBlackout) blackoutDates = selectedDates;
                         done(selectedDates, blackoutDates, blackoutDays,
                             blackoutMonths);
                         blackoutDates.clear();

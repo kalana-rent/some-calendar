@@ -20,6 +20,7 @@ class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
   ];
   List<int> blackoutMonths = [
     1,
+    8,
   ];
   bool isBlackout = false;
 
@@ -46,22 +47,20 @@ class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
                   blackoutDates: blackoutDates,
                   blackoutDays: blackoutDays,
                   blackoutMonths: blackoutMonths,
-                  startDate: Jiffy().subtract(years: 3),
-                  lastDate: Jiffy().add(months: 9),
+                  startDate: Jiffy().startOf(Units.DAY),
+                  lastDate: Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH),
                   isBlackout: isBlackout,
                   done: (selectedDates, blackoutDates, blackoutDays,
                       blackoutMonths) {
                     setState(() {
-                      setState(() {
-                        selectedDates = selectedDates;
-                        blackoutDates = blackoutDates;
-                        blackoutDays = blackoutDays;
-                        blackoutMonths = blackoutMonths;
-                        print(selectedDates);
-                        print(blackoutDates);
-                        print(blackoutDays);
-                        print(blackoutMonths);
-                      });
+                      selectedDates = selectedDates;
+                      blackoutDates = blackoutDates;
+                      blackoutDays = blackoutDays;
+                      blackoutMonths = blackoutMonths;
+                      print(selectedDates);
+                      print(blackoutDates);
+                      print(blackoutDays);
+                      print(blackoutMonths);
                     });
                   },
                 ),
