@@ -296,6 +296,20 @@ class SomeCalendarState extends State<SomeCalendar> {
     controller =
         PageController(keepPage: false, initialPage: getInitialController());
 
+    rebuildPage();
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (isWithoutDialog)
+      return withoutDialog();
+    else
+      return show();
+  }
+
+  void rebuildPage() {
     pageView = PageView.builder(
       controller: controller,
       scrollDirection: scrollDirection,
@@ -330,16 +344,6 @@ class SomeCalendarState extends State<SomeCalendar> {
         ));
       },
     );
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (isWithoutDialog)
-      return withoutDialog();
-    else
-      return show();
   }
 
   int getInitialController() {
@@ -419,7 +423,7 @@ class SomeCalendarState extends State<SomeCalendar> {
         blackoutDays.add(dayOfWeek);
       });
     }
-    print('Blackout days: $blackoutDays');
+    rebuildPage();
   }
 
   void monthCallback(String month) {
