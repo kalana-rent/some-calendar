@@ -13,6 +13,7 @@ class SomeCalendarPage extends StatefulWidget {
   final Color primaryColor;
   final Color textColor;
   final Color blackoutColor;
+  final bool isBlackout;
 
   SomeCalendarPage({
     Key key,
@@ -25,6 +26,7 @@ class SomeCalendarPage extends StatefulWidget {
     this.primaryColor,
     this.textColor,
     this.blackoutColor,
+    this.isBlackout,
   });
 
   @override
@@ -38,6 +40,7 @@ class SomeCalendarPage extends StatefulWidget {
         primaryColor: primaryColor,
         textColor: textColor,
         blackoutColor: blackoutColor,
+        isBlackout: isBlackout,
       );
 }
 
@@ -51,6 +54,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   final Color primaryColor;
   final Color textColor;
   final Color blackoutColor;
+  final bool isBlackout;
 
   int startDayOffset = 0;
   List<DateTime> selectedDates;
@@ -69,6 +73,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
     this.primaryColor,
     this.textColor,
     this.blackoutColor,
+    this.isBlackout,
   });
 
   @override
@@ -96,6 +101,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         blackoutColor: blackoutColor,
         primaryColor: primaryColor,
         blackoutDays: blackoutDays,
+        isBlackout: isBlackout,
       ),
     );
 
@@ -105,12 +111,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         rows.add(Row(
           children: buildSomeCalendarDay(dateTime.dateTime, lastDate, i),
         ));
-        var tempTime = dateTime;
         dateTime = dateTime..add(days: startDayOffset);
-        if (dateTime.dateTime.day == tempTime.dateTime.day &&
-            dateTime.dateTime.hour == 23) {
-          dateTime = dateTime..add(hours: 1);
-        }
       } else {
         rows.add(Row(
             children: buildSomeCalendarDay(dateTime.dateTime, lastDate, i)));
@@ -123,24 +124,22 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
 
   List<Widget> buildSomeCalendarDay(
       DateTime rowStartDate, DateTime rowEndDate, int position) {
+    int weekday = rowStartDate.weekday == 7 ? 0 : rowStartDate.weekday;
     List<Widget> items = [];
     DateTime currentDate = rowStartDate;
     rowEndDate = Jiffy(rowEndDate).add(days: 1);
     startDayOffset = 0;
     if (position == 1) {
       for (int i = 0; i < 7; i++) {
-        if (i + 1 == rowStartDate.weekday + 1) {
+        if (i == weekday) {
           items.add(someDay(currentDate));
           startDayOffset++;
+          var tempTime = currentDate;
           currentDate = currentDate.add(Duration(days: 1));
-        } else if (i + 1 > rowStartDate.weekday) {
-          if (rowEndDate.isAfter(currentDate)) {
-            items.add(someDay(currentDate));
-            startDayOffset++;
-            currentDate = currentDate.add(Duration(days: 1));
-          } else {
-            items.add(someDayEmpty());
+          if (currentDate.day == tempTime.day) {
+            currentDate = currentDate.add(Duration(hours: 1));
           }
+          weekday = currentDate.weekday == 7 ? 0 : currentDate.weekday;
         } else {
           items.add(someDayEmpty());
         }

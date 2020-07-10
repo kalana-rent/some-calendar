@@ -14,7 +14,7 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
   List<int> blackoutDays = [];
   List<int> blackoutMonths = [];
 
-  bool isBlackout = false;
+  bool isBlackout = true;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 

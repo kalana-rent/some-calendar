@@ -301,6 +301,7 @@ class SomeCalendarState extends State<SomeCalendar> {
           primaryColor: primaryColor,
           textColor: textColor,
           blackoutColor: blackoutColor,
+          isBlackout: isBlackout,
         ));
       },
     );
