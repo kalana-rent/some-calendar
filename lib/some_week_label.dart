@@ -32,13 +32,13 @@ class SomeWeekLabel extends StatelessWidget {
         margin: EdgeInsets.fromLTRB(2, 0, 2, 0),
         child: InkWell(
           onTap: () {
-            onTapDayOfWeek(dayOfWeek + 1);
+            onTapDayOfWeek(dayOfWeek);
           },
           borderRadius: BorderRadius.all(
             Radius.circular(50),
           ),
           child: Container(
-            decoration: getDecoration(dayOfWeek + 1),
+            decoration: getDecoration(dayOfWeek),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
               child: Text(
@@ -83,7 +83,7 @@ class SomeWeekLabel extends StatelessWidget {
         fontSize: 14.2,
         fontWeight: FontWeight.w600,
         letterSpacing: 1,
-        color: blackoutDays.contains(i + 1) ? Colors.white : textColor,
+        color: blackoutDays.contains(i) ? Colors.white : textColor,
       );
       list.add(_weekdayContainer(
           _localeDate.dateSymbols.STANDALONESHORTWEEKDAYS[i], textStyle, i));
