@@ -141,6 +141,8 @@ class SomeCalendarState extends State<SomeCalendar> {
 
   Labels labels;
 
+  SomeDateRange someDateRange;
+
   SomeCalendarState({
     @required this.done,
     this.startDate,
@@ -295,9 +297,7 @@ class SomeCalendarState extends State<SomeCalendar> {
     pagesCount = SomeUtils.getCountFromDiffDate(startDate, lastDate);
     controller =
         PageController(keepPage: false, initialPage: getInitialController());
-
     rebuildPage();
-
     super.initState();
   }
 
@@ -306,7 +306,8 @@ class SomeCalendarState extends State<SomeCalendar> {
     if (isWithoutDialog)
       return withoutDialog();
     else
-      return show();
+    return withoutDialog();
+      // return show();
   }
 
   void rebuildPage() {
@@ -315,8 +316,9 @@ class SomeCalendarState extends State<SomeCalendar> {
       scrollDirection: scrollDirection,
       itemCount: pagesCount,
       onPageChanged: (index) {
-        SomeDateRange someDateRange = getDateRange(index);
+        someDateRange = getDateRange(index);
         setState(() {
+          someDateRange = someDateRange;
           if (mode == SomeMode.Multi) {
             monthFirstDate = Jiffy(someDateRange.startDate).format("MMM");
             yearFirstDate = Jiffy(someDateRange.startDate).format("yyyy");
@@ -426,12 +428,18 @@ class SomeCalendarState extends State<SomeCalendar> {
     rebuildPage();
   }
 
-  void monthCallback(String month) {
-    DateTime monthNum = DateTime.tryParse(month);
-    // TODO: need to figure out how to get the actual dateTime object here
-    // TODO: that way we can use it to get the month number back out by using
-    // TODO: variable.month allowing us to add it to the blackout months.
-    print(monthNum);
+  void monthCallback(DateTime startDateOfMonth) {
+    int month = startDateOfMonth.month;
+    if (blackoutMonths.contains(month)) {
+      setState(() {
+        blackoutMonths.remove(month);
+      });
+    } else {
+      setState(() {
+        blackoutMonths.add(month);
+      });
+    }
+    rebuildPage();
   }
 
   void generateListDateRange() {
@@ -482,40 +490,55 @@ class SomeCalendarState extends State<SomeCalendar> {
       width: MediaQuery.of(context).size.width,
       child: Column(
         children: <Widget>[
-          RichText(
-            text: TextSpan(
-              style: TextStyle(
-                  fontFamily: "playfair-regular",
-                  fontSize: 14.2,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
-                  color: textColor),
-              children: <TextSpan>[
-                TextSpan(
-                  text: '$month',
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => monthCallback(month),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () => {
+                  monthCallback(
+                      someDateRange == null ? now : someDateRange.startDate),
+                },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                          fontFamily: "playfair-regular",
+                          fontSize: 14.2,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
+                          color: textColor),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: '$month',
+                        ),
+                        TextSpan(
+                          text: ', ',
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                TextSpan(
-                  text: ', ',
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0,8,8,8),
+                child: RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                        fontFamily: "playfair-regular",
+                        fontSize: 14.2,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
+                        color: textColor),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: '$year',
+                      ),
+                    ],
+                  ),
                 ),
-                TextSpan(
-                  text: '$year',
-                ),
-              ],
-            ),
-          ),
-          // Text(
-          //   "$month, $year",
-          //   style: TextStyle(
-          //       fontFamily: "playfair-regular",
-          //       fontSize: 14.2,
-          //       fontWeight: FontWeight.w600,
-          //       letterSpacing: 1,
-          //       color: textColor),
-          // ),
-          SizedBox(
-            height: 16,
+              ),
+            ],
           ),
           Expanded(
             child: ListView(

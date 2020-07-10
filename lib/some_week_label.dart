@@ -24,10 +24,13 @@ class SomeWeekLabel extends StatelessWidget {
         onTap: () {
           onTapDayOfWeek(dayOfWeek + 1);
         },
-        child: Text(
-          weekDayName.replaceAll('.', ''),
-          textAlign: TextAlign.center,
-          style: textStyle,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0,8,0,8),
+          child: Text(
+            weekDayName.replaceAll('.', ''),
+            textAlign: TextAlign.center,
+            style: textStyle,
+          ),
         ),
       ),
     );

@@ -23,16 +23,8 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
     DateTime.parse('2020-07-25'),
   ];
   List<int> blackoutDays = [
-    1,
-    7,
   ];
   List<int> blackoutMonths = [
-    1,
-    2,
-    3,
-    10,
-    11,
-    12,
   ];
 
   bool isBlackout = true;
@@ -53,7 +45,7 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
               Padding(
                 padding: EdgeInsets.all(18),
                 child: SomeCalendar(
-                  primaryColor: Color(0xff5833A5),
+                  primaryColor: Color.fromRGBO(2, 2, 2, 1),
                   mode: SomeMode.Multi,
                   isWithoutDialog: true,
                   selectedDates: selectedDates,
@@ -67,13 +59,16 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
                     setState(() {
                       if (!isBlackout) {
                         selectedDates = date;
-                        showSnackbar(selectedDates.toString());
+                        // showSnackbar(selectedDates.toString());
                       } else {
                         blackoutDates = date;
-                        showSnackbar('blackout dates: $blackoutDates');
+                        // showSnackbar('blackout dates: $blackoutDates');
                       }
+                      print(selectedDates);
+                      print(blackoutDates);
                     });
                   },
+                  blackoutColor: Color.fromRGBO(112, 112, 112, 1),
                 ),
               )
             ],
