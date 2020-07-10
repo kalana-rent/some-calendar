@@ -1,5 +1,6 @@
 library some_calendar;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:some_calendar/some_calendar_page.dart';
@@ -418,6 +419,15 @@ class SomeCalendarState extends State<SomeCalendar> {
         blackoutDays.add(dayOfWeek);
       });
     }
+    print('Blackout days: $blackoutDays');
+  }
+
+  void monthCallback(String month) {
+    DateTime monthNum = DateTime.tryParse(month);
+    // TODO: need to figure out how to get the actual dateTime object here
+    // TODO: that way we can use it to get the month number back out by using
+    // TODO: variable.month allowing us to add it to the blackout months.
+    print(monthNum);
   }
 
   void generateListDateRange() {
@@ -468,15 +478,38 @@ class SomeCalendarState extends State<SomeCalendar> {
       width: MediaQuery.of(context).size.width,
       child: Column(
         children: <Widget>[
-          Text(
-            "$month, $year",
-            style: TextStyle(
-                fontFamily: "playfair-regular",
-                fontSize: 14.2,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1,
-                color: textColor),
+          RichText(
+            text: TextSpan(
+              style: TextStyle(
+                  fontFamily: "playfair-regular",
+                  fontSize: 14.2,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
+                  color: textColor),
+              children: <TextSpan>[
+                TextSpan(
+                  text: '$month',
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () => monthCallback(month),
+                ),
+                TextSpan(
+                  text: ', ',
+                ),
+                TextSpan(
+                  text: '$year',
+                ),
+              ],
+            ),
           ),
+          // Text(
+          //   "$month, $year",
+          //   style: TextStyle(
+          //       fontFamily: "playfair-regular",
+          //       fontSize: 14.2,
+          //       fontWeight: FontWeight.w600,
+          //       letterSpacing: 1,
+          //       color: textColor),
+          // ),
           SizedBox(
             height: 16,
           ),

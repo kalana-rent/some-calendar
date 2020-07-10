@@ -23,6 +23,7 @@ class SomeWeekLabel extends StatelessWidget {
       child: InkWell(
         onTap: () {
           print(dayOfWeek);
+          onTapDayOfWeek(dayOfWeek + 1);
         },
         child: Text(
           weekDayName.replaceAll('.', ''),
