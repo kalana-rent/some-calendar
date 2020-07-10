@@ -468,6 +468,7 @@ class SomeCalendarState extends State<SomeCalendar> {
       });
     }
     rebuildPage();
+    done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
   }
 
   void monthCallback(int monthNum) {
@@ -481,6 +482,7 @@ class SomeCalendarState extends State<SomeCalendar> {
       });
     }
     rebuildPage();
+    done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
   }
 
   void generateListDateRange() {
