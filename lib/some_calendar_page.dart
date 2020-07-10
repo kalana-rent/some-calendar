@@ -181,15 +181,20 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
                       onTapFunction(currentDate);
                     });
                   },
+            borderRadius: BorderRadius.all(
+              Radius.circular(50),
+            ),
             child: Container(
-                child: Padding(
-              padding: const EdgeInsets.all(6),
-              child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(6),
+                child: Center(
                   child: Text(
-                "${currentDate.day}",
-                style: TextStyle(color: getColor(currentDate)),
-              )),
-            )),
+                    "${currentDate.day}",
+                    style: TextStyle(color: getColor(currentDate)),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -262,7 +267,6 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
     if (mode == SomeMode.Multi) {
       return selectedDates.contains(currentDate) ? decoration : null;
     } else if (mode == SomeMode.Single) {
-      print(selectedDate);
       return selectedDate == currentDate ? decoration : null;
     } else {
       if (selectedDates[0] == currentDate) {

@@ -1,6 +1,5 @@
 library some_calendar;
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:some_calendar/some_calendar_page.dart';
@@ -195,10 +194,6 @@ class SomeCalendarState extends State<SomeCalendar> {
       blackoutDates.addAll(tempListDates);
     }
 
-    // } else {
-    //   blackoutDate = SomeUtils.setToMidnight(blackoutDate);
-    // }
-
     if (textColor == null) textColor = Colors.black;
     if (blackoutColor == null) blackoutColor = Colors.grey;
     if (primaryColor == null) primaryColor = Color(0xff365535);
@@ -306,8 +301,7 @@ class SomeCalendarState extends State<SomeCalendar> {
     if (isWithoutDialog)
       return withoutDialog();
     else
-    return withoutDialog();
-      // return show();
+      return show();
   }
 
   void rebuildPage() {
@@ -428,15 +422,14 @@ class SomeCalendarState extends State<SomeCalendar> {
     rebuildPage();
   }
 
-  void monthCallback(DateTime startDateOfMonth) {
-    int month = startDateOfMonth.month;
-    if (blackoutMonths.contains(month)) {
+  void monthCallback(int monthNum) {
+    if (blackoutMonths.contains(monthNum)) {
       setState(() {
-        blackoutMonths.remove(month);
+        blackoutMonths.remove(monthNum);
       });
     } else {
       setState(() {
-        blackoutMonths.add(month);
+        blackoutMonths.add(monthNum);
       });
     }
     rebuildPage();
@@ -485,6 +478,8 @@ class SomeCalendarState extends State<SomeCalendar> {
 
   withoutDialog() {
     var heightContainer = mode == SomeMode.Range ? 55 * 6 : 55 * 6;
+    int monthNum =
+        someDateRange == null ? now.month : someDateRange.startDate.month;
     return Container(
       height: heightContainer.toDouble(),
       width: MediaQuery.of(context).size.width,
@@ -493,35 +488,47 @@ class SomeCalendarState extends State<SomeCalendar> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              InkWell(
-                onTap: () => {
-                  monthCallback(
-                      someDateRange == null ? now : someDateRange.startDate),
-                },
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
-                  child: RichText(
-                    text: TextSpan(
-                      style: TextStyle(
+              Container(
+                decoration: BoxDecoration(
+                  color: blackoutMonths.contains(monthNum)
+                      ? primaryColor
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(50),
+                  ),
+                ),
+                child: InkWell(
+                  onTap: () => {
+                    monthCallback(monthNum),
+                  },
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(50),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(
                           fontFamily: "playfair-regular",
                           fontSize: 14.2,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 1,
-                          color: textColor),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: '$month',
+                          color: blackoutMonths.contains(monthNum)
+                              ? Colors.white
+                              : textColor,
                         ),
-                        TextSpan(
-                          text: ', ',
-                        ),
-                      ],
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '$month',
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(0,8,8,8),
+                padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
                 child: RichText(
                   text: TextSpan(
                     style: TextStyle(
@@ -539,6 +546,9 @@ class SomeCalendarState extends State<SomeCalendar> {
                 ),
               ),
             ],
+          ),
+          SizedBox(
+            height: 8,
           ),
           Expanded(
             child: ListView(

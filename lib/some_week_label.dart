@@ -34,6 +34,9 @@ class SomeWeekLabel extends StatelessWidget {
           onTap: () {
             onTapDayOfWeek(dayOfWeek + 1);
           },
+          borderRadius: BorderRadius.all(
+            Radius.circular(50),
+          ),
           child: Container(
             decoration: getDecoration(dayOfWeek + 1),
             child: Padding(
@@ -72,7 +75,7 @@ class SomeWeekLabel extends StatelessWidget {
     // based on https://github.com/dooboolab/flutter_calendar_carousel/blob/master/lib/src/weekday_row.dart
 
     DateFormat _localeDate = DateFormat.yMMM();
-    for (var i = firstDayOfWeek, count = 0;
+    for (int i = firstDayOfWeek, count = 0;
         count < 7;
         i = (i + 1) % 7, count++) {
       TextStyle textStyle = TextStyle(
