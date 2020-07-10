@@ -107,7 +107,8 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         ));
         var tempTime = dateTime;
         dateTime = dateTime..add(days: startDayOffset);
-        if (dateTime.dateTime.day == tempTime.dateTime.day && dateTime.dateTime.hour == 23) {
+        if (dateTime.dateTime.day == tempTime.dateTime.day &&
+            dateTime.dateTime.hour == 23) {
           dateTime = dateTime..add(hours: 1);
         }
       } else {
@@ -175,7 +176,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
                     blackoutMonths != null &&
                         blackoutMonths.isNotEmpty &&
                         isBlackoutMonth(currentDate)
-                ? null
+                ? null // TODO: create call back to alert the user they selected a date that is unavailable
                 : () {
                     setState(() {
                       onTapFunction(currentDate);
@@ -221,17 +222,6 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
       } else {
         return textColor;
       }
-      // if (selectedDates.isNotEmpty && blackoutDates.isEmpty) {
-      //   return selectedDates.contains(currentDate)
-      //       ? Colors.white
-      //       : (isWeekend(currentDate) ? textColor.withAlpha(222) : textColor);
-      // } else if (selectedDates.isEmpty && blackoutDates.isNotEmpty) {
-      //   return blackoutDates.contains(currentDate)
-      //       ? Colors.white
-      //       : (isWeekend(currentDate)
-      //           ? blackoutColor.withAlpha(222)
-      //           : blackoutColor);
-      // }
     } else if (mode == SomeMode.Single) {
       return selectedDate == currentDate
           ? Colors.white

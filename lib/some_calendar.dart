@@ -343,22 +343,27 @@ class SomeCalendarState extends State<SomeCalendar> {
       if (endRangeDate == null && firstRangeDate == null) {
         endRangeDate = a;
         firstRangeDate = a;
-      } else if (endRangeDate.isAtSameMomentAs(firstRangeDate)) {
-        if (endRangeDate.isAfter(a)) {
+      } else if (!includesBlackoutDate(a, endRangeDate, firstRangeDate)) {
+        if (endRangeDate.isAtSameMomentAs(firstRangeDate)) {
+          if (endRangeDate.isAfter(a)) {
+            firstRangeDate = a;
+          } else {
+            endRangeDate = a;
+          }
+        } else if (endRangeDate.isAtSameMomentAs(a) ||
+            firstRangeDate.isAtSameMomentAs(a) &&
+                (endRangeDate.day - firstRangeDate.day).abs() == 1) {
+          endRangeDate = a;
+          firstRangeDate = a;
+        } else if ((endRangeDate.day - a.day).abs() >
+            (firstRangeDate.day - a.day).abs()) {
           firstRangeDate = a;
         } else {
           endRangeDate = a;
         }
-      } else if (endRangeDate.isAtSameMomentAs(a) ||
-          firstRangeDate.isAtSameMomentAs(a) &&
-              (endRangeDate.day - firstRangeDate.day).abs() == 1) {
+      } else if (!isBlackoutDate(a)) {
         endRangeDate = a;
         firstRangeDate = a;
-      } else if ((endRangeDate.day - a.day).abs() >
-          (firstRangeDate.day - a.day).abs()) {
-        firstRangeDate = a;
-      } else {
-        endRangeDate = a;
       }
       selectedDates.clear();
       generateListDateRange();
@@ -376,6 +381,79 @@ class SomeCalendarState extends State<SomeCalendar> {
         done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
       }
     }
+  }
+
+  bool includesBlackoutDate(DateTime newDate, endRangeDate, firstRangeDate) {
+    // What date should be updated
+    bool updateFirst = false;
+    if (endRangeDate.isAtSameMomentAs(firstRangeDate)) {
+      if (endRangeDate.isAfter(newDate)) {
+        updateFirst = true;
+      }
+    } else if ((endRangeDate.day - newDate.day).abs() >
+        (firstRangeDate.day - newDate.day).abs()) {
+      updateFirst = true;
+    }
+
+    List<DateTime> dateRange = [];
+    if (updateFirst) {
+      dateRange = generateDateRange(
+          newDate.isBefore(firstRangeDate) ? newDate : firstRangeDate,
+          newDate.isAfter(firstRangeDate) ? newDate : firstRangeDate);
+    } else {
+      dateRange = generateDateRange(
+          newDate.isBefore(endRangeDate) ? newDate : endRangeDate,
+          newDate.isAfter(endRangeDate) ? newDate : endRangeDate);
+    }
+
+    for (int month in blackoutMonths) {
+      for (DateTime date in dateRange) {
+        if (date.month == month) {
+          return true;
+        }
+      }
+    }
+    for (int dayOfWeek in blackoutDays) {
+      for (DateTime date in dateRange) {
+        if (date.weekday == dayOfWeek) {
+          return true;
+        }
+      }
+    }
+    for (DateTime date in dateRange) {
+      if (blackoutDates.contains(date)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool isBlackoutDate(DateTime date) {
+    for (int month in blackoutMonths) {
+      if (date.month == month) {
+        return true;
+      }
+    }
+    for (int dayOfWeek in blackoutDays) {
+      if (date.weekday == dayOfWeek) {
+        return true;
+      }
+    }
+    if (blackoutDates.contains(date)) {
+      return true;
+    }
+    return false;
+  }
+
+  List<DateTime> generateDateRange(firstDate, lastDate) {
+    List<DateTime> dates = [];
+    int diff = lastDate.difference(firstDate).inDays.abs() + 1;
+    DateTime date = firstDate;
+    for (int i = 0; i < diff; i++) {
+      dates.add(date);
+      date = Jiffy(date).add(days: 1);
+    }
+    return dates;
   }
 
   void dayOfWeekCallback(int dayOfWeek) {
@@ -461,7 +539,7 @@ class SomeCalendarState extends State<SomeCalendar> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: blackoutMonths.contains(monthNum)
+                  color: isBlackout && blackoutMonths.contains(monthNum)
                       ? primaryColor
                       : Colors.transparent,
                   borderRadius: BorderRadius.all(
@@ -486,7 +564,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                           fontSize: 14.2,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 1,
-                          color: blackoutMonths.contains(monthNum)
+                          color: isBlackout && blackoutMonths.contains(monthNum)
                               ? Colors.white
                               : textColor,
                         ),
