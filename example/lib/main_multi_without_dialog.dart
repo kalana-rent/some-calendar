@@ -10,11 +10,18 @@ class MainMultiWithoutDialog extends StatefulWidget {
 class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
   DateTime selectedDate = DateTime.now();
   List<DateTime> selectedDates = List();
+  List<DateTime> blackoutDates = [];
+  List<int> blackoutDays = [];
+  List<int> blackoutMonths = [];
+
+  bool isBlackout = true;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+    print(
+        Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH).toIso8601String());
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -27,18 +34,30 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
               Padding(
                 padding: EdgeInsets.all(18),
                 child: SomeCalendar(
-                  primaryColor: Color(0xff5833A5),
+                  primaryColor: Color.fromRGBO(2, 2, 2, 1),
                   mode: SomeMode.Multi,
                   isWithoutDialog: true,
                   selectedDates: selectedDates,
-                  startDate: Jiffy().subtract(years: 3),
-                  lastDate: Jiffy().add(months: 9),
-                  done: (date) {
+                  blackoutDates: blackoutDates,
+                  blackoutDays: blackoutDays,
+                  blackoutMonths: blackoutMonths,
+                  startDate: Jiffy().startOf(Units.DAY),
+                  lastDate: Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH),
+                  isBlackout: isBlackout,
+                  done: (selectedDates, blackoutDates, blackoutDays,
+                      blackoutMonths) {
                     setState(() {
-                      selectedDates = date;
-                      showSnackbar(selectedDates.toString());
+                      selectedDates = selectedDates;
+                      blackoutDates = blackoutDates;
+                      blackoutDays = blackoutDays;
+                      blackoutMonths = blackoutMonths;
+                      print(selectedDates);
+                      print(blackoutDates);
+                      print(blackoutDays);
+                      print(blackoutMonths);
                     });
                   },
+                  blackoutColor: Color.fromRGBO(112, 112, 112, 1),
                 ),
               )
             ],

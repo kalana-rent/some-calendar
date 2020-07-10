@@ -10,6 +10,19 @@ class MainRangeWithoutDialog extends StatefulWidget {
 class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
   DateTime selectedDate = DateTime.now();
   List<DateTime> selectedDates = List();
+  List<DateTime> blackoutDates = [
+    DateTime.parse('2020-07-09'),
+    DateTime.parse('2020-07-10'),
+    DateTime.parse('2020-07-11'),
+  ];
+  List<int> blackoutDays = [
+    1,
+  ];
+  List<int> blackoutMonths = [
+    1,
+    8,
+  ];
+  bool isBlackout = false;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -27,16 +40,27 @@ class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
               Padding(
                 padding: EdgeInsets.all(18),
                 child: SomeCalendar(
-                  primaryColor: Color(0xff5833A5),
+                  primaryColor: Color.fromRGBO(2, 2, 2, 1),
                   mode: SomeMode.Range,
                   isWithoutDialog: true,
                   selectedDates: selectedDates,
-                  startDate: Jiffy().subtract(years: 3),
-                  lastDate: Jiffy().add(months: 9),
-                  done: (date) {
+                  blackoutDates: blackoutDates,
+                  blackoutDays: blackoutDays,
+                  blackoutMonths: blackoutMonths,
+                  startDate: Jiffy().startOf(Units.DAY),
+                  lastDate: Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH),
+                  isBlackout: isBlackout,
+                  done: (selectedDates, blackoutDates, blackoutDays,
+                      blackoutMonths) {
                     setState(() {
-                      selectedDates = date;
-                      showSnackbar(selectedDates.toString());
+                      selectedDates = selectedDates;
+                      blackoutDates = blackoutDates;
+                      blackoutDays = blackoutDays;
+                      blackoutMonths = blackoutMonths;
+                      print(selectedDates);
+                      print(blackoutDates);
+                      print(blackoutDays);
+                      print(blackoutMonths);
                     });
                   },
                 ),

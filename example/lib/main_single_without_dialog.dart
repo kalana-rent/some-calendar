@@ -4,7 +4,8 @@ import 'package:some_calendar/some_calendar.dart';
 
 class MainSingleWithoutDialog extends StatefulWidget {
   @override
-  _MainSingleWithoutDialogState createState() => _MainSingleWithoutDialogState();
+  _MainSingleWithoutDialogState createState() =>
+      _MainSingleWithoutDialogState();
 }
 
 class _MainSingleWithoutDialogState extends State<MainSingleWithoutDialog> {
@@ -27,18 +28,25 @@ class _MainSingleWithoutDialogState extends State<MainSingleWithoutDialog> {
               Padding(
                 padding: EdgeInsets.all(18),
                 child: SomeCalendar(
-                  primaryColor: Color(0xff5833A5),
+                  primaryColor: Color.fromRGBO(2, 2, 2, 1),
                   textColor: Colors.red,
                   mode: SomeMode.Single,
                   isWithoutDialog: true,
                   selectedDate: selectedDate,
-                  startDate: Jiffy().subtract(years: 3),
+                  startDate: Jiffy().startOf(Units.DAY),
+                  lastDate: Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH),
                   scrollDirection: Axis.horizontal,
-                  lastDate: Jiffy().add(months: 9),
-                  done: (date) {
+                  done: (selectedDates, blackoutDates, blackoutDays,
+                      blackoutMonths) {
                     setState(() {
-                      selectedDate = date;
-                      showSnackbar(selectedDate.toString());
+                      selectedDates = selectedDates;
+                      blackoutDates = blackoutDates;
+                      blackoutDays = blackoutDays;
+                      blackoutMonths = blackoutMonths;
+                      print(selectedDates);
+                      print(blackoutDates);
+                      print(blackoutDays);
+                      print(blackoutMonths);
                     });
                   },
                 ),
