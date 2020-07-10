@@ -128,7 +128,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
     startDayOffset = 0;
     if (position == 1) {
       for (int i = 0; i < 7; i++) {
-        if (i + 1 == rowStartDate.weekday) {
+        if (i + 1 == rowStartDate.weekday + 1) {
           items.add(someDay(currentDate));
           startDayOffset++;
           currentDate = currentDate.add(Duration(days: 1));

@@ -7,7 +7,7 @@ import 'package:some_calendar/some_date_range.dart';
 import 'package:some_calendar/some_utils.dart';
 
 typedef void OnTapFunction(DateTime date);
-typedef void OnDoneFunction(date);
+typedef void OnDoneFunction(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
 
 enum SomeMode { Range, Single, Multi }
 
@@ -363,7 +363,7 @@ class SomeCalendarState extends State<SomeCalendar> {
         return a.compareTo(b);
       });
       if (isWithoutDialog) {
-        done(selectedDates);
+        done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
       }
     } else if (mode == SomeMode.Single) {
       selectedDate = a;
@@ -372,7 +372,7 @@ class SomeCalendarState extends State<SomeCalendar> {
         monthFirstDate = Jiffy(selectedDate).format("MMM");
         yearFirstDate = Jiffy(selectedDate).format("yyyy");
         if (isWithoutDialog) {
-          done(selectedDate);
+          done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
         }
       });
     } else {
@@ -403,8 +403,7 @@ class SomeCalendarState extends State<SomeCalendar> {
       });
 
       if (isWithoutDialog) {
-        if (widget.isBlackout) blackoutDates = selectedDates;
-        done(!widget.isBlackout ? selectedDates : blackoutDates);
+        done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
       }
     }
   }
@@ -749,10 +748,10 @@ class SomeCalendarState extends State<SomeCalendar> {
                     onPressed: () {
                       if (mode == SomeMode.Multi || mode == SomeMode.Range) {
                         if (isBlackout) blackoutDates = selectedDates;
-                        done(isBlackout ? blackoutDates : selectedDates);
+                        done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
                         blackoutDates.clear();
                       } else if (mode == SomeMode.Single) {
-                        done(selectedDate);
+                        done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
                       }
                       Navigator.of(context).pop();
                     },

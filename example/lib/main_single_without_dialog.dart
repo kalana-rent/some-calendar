@@ -4,7 +4,8 @@ import 'package:some_calendar/some_calendar.dart';
 
 class MainSingleWithoutDialog extends StatefulWidget {
   @override
-  _MainSingleWithoutDialogState createState() => _MainSingleWithoutDialogState();
+  _MainSingleWithoutDialogState createState() =>
+      _MainSingleWithoutDialogState();
 }
 
 class _MainSingleWithoutDialogState extends State<MainSingleWithoutDialog> {
@@ -35,10 +36,19 @@ class _MainSingleWithoutDialogState extends State<MainSingleWithoutDialog> {
                   startDate: Jiffy().subtract(years: 3),
                   scrollDirection: Axis.horizontal,
                   lastDate: Jiffy().add(months: 9),
-                  done: (date) {
+                  done: (selectedDates, blackoutDates, blackoutDays,
+                      blackoutMonths) {
                     setState(() {
-                      selectedDate = date;
-                      showSnackbar(selectedDate.toString());
+                      setState(() {
+                        selectedDates = selectedDates;
+                        blackoutDates = blackoutDates;
+                        blackoutDays = blackoutDays;
+                        blackoutMonths = blackoutMonths;
+                        print(selectedDates);
+                        print(blackoutDates);
+                        print(blackoutDays);
+                        print(blackoutMonths);
+                      });
                     });
                   },
                 ),

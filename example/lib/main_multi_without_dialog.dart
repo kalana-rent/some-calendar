@@ -10,29 +10,18 @@ class MainMultiWithoutDialog extends StatefulWidget {
 class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
   DateTime selectedDate = DateTime.now();
   List<DateTime> selectedDates = List();
-  List<DateTime> blackoutDates = [
-    DateTime.parse('2020-07-09'),
-    DateTime.parse('2020-07-10'),
-    DateTime.parse('2020-07-11'),
-  ];
-  List<DateTime> purchasedDates = [
-    DateTime.parse('2020-07-15'),
-    DateTime.parse('2020-07-18'),
-    DateTime.parse('2020-07-23'),
-    DateTime.parse('2020-07-24'),
-    DateTime.parse('2020-07-25'),
-  ];
-  List<int> blackoutDays = [
-  ];
-  List<int> blackoutMonths = [
-  ];
+  List<DateTime> blackoutDates = [];
+  List<int> blackoutDays = [];
+  List<int> blackoutMonths = [];
 
-  bool isBlackout = true;
+  bool isBlackout = false;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+    print(
+        Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH).toIso8601String());
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -52,20 +41,20 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
                   blackoutDates: blackoutDates,
                   blackoutDays: blackoutDays,
                   blackoutMonths: blackoutMonths,
-                  startDate: Jiffy().subtract(years: 3),
-                  lastDate: Jiffy().add(months: 9),
+                  startDate: Jiffy().startOf(Units.DAY),
+                  lastDate: Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH),
                   isBlackout: isBlackout,
-                  done: (date) {
+                  done: (selectedDates, blackoutDates, blackoutDays,
+                      blackoutMonths) {
                     setState(() {
-                      if (!isBlackout) {
-                        selectedDates = date;
-                        // showSnackbar(selectedDates.toString());
-                      } else {
-                        blackoutDates = date;
-                        // showSnackbar('blackout dates: $blackoutDates');
-                      }
+                      selectedDates = selectedDates;
+                      blackoutDates = blackoutDates;
+                      blackoutDays = blackoutDays;
+                      blackoutMonths = blackoutMonths;
                       print(selectedDates);
                       print(blackoutDates);
+                      print(blackoutDays);
+                      print(blackoutMonths);
                     });
                   },
                   blackoutColor: Color.fromRGBO(112, 112, 112, 1),

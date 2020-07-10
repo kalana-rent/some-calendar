@@ -62,15 +62,19 @@ class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
                   startDate: Jiffy().subtract(years: 3),
                   lastDate: Jiffy().add(months: 9),
                   isBlackout: isBlackout,
-                  done: (date) {
+                  done: (selectedDates, blackoutDates, blackoutDays,
+                      blackoutMonths) {
                     setState(() {
-                      if (!isBlackout) {
-                        selectedDates = date;
-                        showSnackbar(selectedDates.toString());
-                      } else {
-                        blackoutDates = date;
-                        showSnackbar(blackoutDates.toString());
-                      }
+                      setState(() {
+                        selectedDates = selectedDates;
+                        blackoutDates = blackoutDates;
+                        blackoutDays = blackoutDays;
+                        blackoutMonths = blackoutMonths;
+                        print(selectedDates);
+                        print(blackoutDates);
+                        print(blackoutDays);
+                        print(blackoutMonths);
+                      });
                     });
                   },
                 ),
