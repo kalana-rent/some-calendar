@@ -176,7 +176,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
                     blackoutMonths != null &&
                         blackoutMonths.isNotEmpty &&
                         isBlackoutMonth(currentDate)
-                ? null // TODO: create call back to alert the user they selected a date that is unavailable
+                ? null
                 : () {
                     setState(() {
                       onTapFunction(currentDate);

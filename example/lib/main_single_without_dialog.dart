@@ -28,14 +28,14 @@ class _MainSingleWithoutDialogState extends State<MainSingleWithoutDialog> {
               Padding(
                 padding: EdgeInsets.all(18),
                 child: SomeCalendar(
-                  primaryColor: Color(0xff5833A5),
+                  primaryColor: Color.fromRGBO(2, 2, 2, 1),
                   textColor: Colors.red,
                   mode: SomeMode.Single,
                   isWithoutDialog: true,
                   selectedDate: selectedDate,
-                  startDate: Jiffy().subtract(years: 3),
+                  startDate: Jiffy().startOf(Units.DAY),
+                  lastDate: Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH),
                   scrollDirection: Axis.horizontal,
-                  lastDate: Jiffy().add(months: 9),
                   done: (selectedDates, blackoutDates, blackoutDays,
                       blackoutMonths) {
                     setState(() {
