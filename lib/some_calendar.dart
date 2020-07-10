@@ -7,7 +7,8 @@ import 'package:some_calendar/some_date_range.dart';
 import 'package:some_calendar/some_utils.dart';
 
 typedef void OnTapFunction(DateTime date);
-typedef void OnDoneFunction(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+typedef void OnDoneFunction(
+    selectedDates, blackoutDates, blackoutDays, blackoutMonths);
 
 enum SomeMode { Range, Single, Multi }
 
@@ -389,7 +390,6 @@ class SomeCalendarState extends State<SomeCalendar> {
           endRangeDate = a;
         }
       }
-
       selectedDates.clear();
       generateListDateRange();
       selectedDates.sort((a, b) => a.compareTo(b));
@@ -497,9 +497,11 @@ class SomeCalendarState extends State<SomeCalendar> {
                   ),
                 ),
                 child: InkWell(
-                  onTap: () => {
-                    monthCallback(monthNum),
-                  },
+                  onTap: isBlackout
+                      ? () => {
+                            monthCallback(monthNum),
+                          }
+                      : null,
                   borderRadius: BorderRadius.all(
                     Radius.circular(50),
                   ),
@@ -748,10 +750,12 @@ class SomeCalendarState extends State<SomeCalendar> {
                     onPressed: () {
                       if (mode == SomeMode.Multi || mode == SomeMode.Range) {
                         if (isBlackout) blackoutDates = selectedDates;
-                        done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+                        done(selectedDates, blackoutDates, blackoutDays,
+                            blackoutMonths);
                         blackoutDates.clear();
                       } else if (mode == SomeMode.Single) {
-                        done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+                        done(selectedDates, blackoutDates, blackoutDays,
+                            blackoutMonths);
                       }
                       Navigator.of(context).pop();
                     },

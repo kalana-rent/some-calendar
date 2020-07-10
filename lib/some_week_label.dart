@@ -8,6 +8,7 @@ class SomeWeekLabel extends StatelessWidget {
   final Color primaryColor;
   final int firstDayOfWeek;
   final List<int> blackoutDays;
+  final bool isBlackout;
 
   const SomeWeekLabel({
     Key key,
@@ -17,6 +18,7 @@ class SomeWeekLabel extends StatelessWidget {
     this.primaryColor,
     this.firstDayOfWeek = 0,
     this.blackoutDays = const [],
+    this.isBlackout = false,
   }) : super(key: key);
 
   Widget _weekdayContainer(
@@ -31,9 +33,11 @@ class SomeWeekLabel extends StatelessWidget {
         ),
         margin: EdgeInsets.fromLTRB(2, 0, 2, 0),
         child: InkWell(
-          onTap: () {
-            onTapDayOfWeek(dayOfWeek);
-          },
+          onTap: isBlackout
+              ? () {
+                  onTapDayOfWeek(dayOfWeek);
+                }
+              : null,
           borderRadius: BorderRadius.all(
             Radius.circular(50),
           ),
@@ -54,7 +58,7 @@ class SomeWeekLabel extends StatelessWidget {
   }
 
   Decoration getDecoration(int dayOfWeek) {
-    if (blackoutDays.contains(dayOfWeek)) {
+    if (isBlackout && blackoutDays.contains(dayOfWeek)) {
       return BoxDecoration(
         color: primaryColor,
         borderRadius: BorderRadius.all(
@@ -83,7 +87,7 @@ class SomeWeekLabel extends StatelessWidget {
         fontSize: 14.2,
         fontWeight: FontWeight.w600,
         letterSpacing: 1,
-        color: blackoutDays.contains(i) ? Colors.white : textColor,
+        color: !isBlackout ? textColor : blackoutDays.contains(i) ? Colors.white : textColor,
       );
       list.add(_weekdayContainer(
           _localeDate.dateSymbols.STANDALONESHORTWEEKDAYS[i], textStyle, i));

@@ -15,24 +15,11 @@ class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
     DateTime.parse('2020-07-10'),
     DateTime.parse('2020-07-11'),
   ];
-  List<DateTime> purchasedDates = [
-    DateTime.parse('2020-07-15'),
-    DateTime.parse('2020-07-18'),
-    DateTime.parse('2020-07-23'),
-    DateTime.parse('2020-07-24'),
-    DateTime.parse('2020-07-25'),
-  ];
   List<int> blackoutDays = [
     1,
-    7,
   ];
   List<int> blackoutMonths = [
     1,
-    2,
-    3,
-    10,
-    11,
-    12,
   ];
   bool isBlackout = false;
 
