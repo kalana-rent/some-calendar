@@ -94,6 +94,8 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         onTapDayOfWeek: onTapDayOfWeek,
         textColor: textColor,
         blackoutColor: blackoutColor,
+        primaryColor: primaryColor,
+        blackoutDays: blackoutDays,
       ),
     );
 
