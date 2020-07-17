@@ -174,7 +174,8 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
                         isBlackoutDay(currentDate) ||
                     blackoutMonths != null &&
                         blackoutMonths.isNotEmpty &&
-                        isBlackoutMonth(currentDate)
+                        isBlackoutMonth(currentDate) ||
+                    isInPast(currentDate)
                 ? null
                 : () {
                     setState(() {
@@ -216,7 +217,8 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         return Colors.white;
       } else if (blackoutDates.contains(currentDate) ||
           isBlackoutDay(currentDate) ||
-          isBlackoutMonth(currentDate)) {
+          isBlackoutMonth(currentDate) ||
+          isInPast(currentDate)) {
         return blackoutColor != null ? blackoutColor : Colors.grey;
       } else {
         return textColor;
@@ -237,7 +239,8 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
 
   bool isBlackoutDay(currentDate) {
     if (blackoutDays != null) if (blackoutDays.isNotEmpty)
-      return blackoutDays.contains(currentDate.weekday);
+      return blackoutDays
+          .contains(currentDate.weekday == 7 ? 0 : currentDate.weekday);
 
     return false;
   }
@@ -246,6 +249,10 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
     if (blackoutMonths != null) if (blackoutMonths.isNotEmpty)
       return blackoutMonths.contains(currentDate.month);
     return false;
+  }
+
+  bool isInPast(currentDate) {
+    return currentDate.isBefore(DateTime.now());
   }
 
   Decoration getDecoration(currentDate) {

@@ -41,7 +41,7 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
                   blackoutDates: blackoutDates,
                   blackoutDays: blackoutDays,
                   blackoutMonths: blackoutMonths,
-                  startDate: Jiffy().startOf(Units.DAY),
+                  startDate: Jiffy().startOf(Units.MONTH),
                   lastDate: Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH),
                   isBlackout: isBlackout,
                   done: (selectedDates, blackoutDates, blackoutDays,
