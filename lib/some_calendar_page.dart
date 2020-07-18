@@ -111,15 +111,24 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         rows.add(Row(
           children: buildSomeCalendarDay(dateTime.dateTime, lastDate, i),
         ));
-        dateTime = dateTime..add(days: startDayOffset);
+        dateTime = addOffset(dateTime, startDayOffset);
       } else {
         rows.add(Row(
             children: buildSomeCalendarDay(dateTime.dateTime, lastDate, i)));
-        dateTime = dateTime..add(days: startDayOffset);
+        dateTime = addOffset(dateTime, startDayOffset);
       }
     }
 
     return Column(mainAxisSize: MainAxisSize.min, children: rows);
+  }
+
+  Jiffy addOffset(Jiffy dateTime, int startDayOffset) {
+    dateTime = dateTime..add(days: startDayOffset);
+    if (dateTime.hour == 23) {
+      dateTime = dateTime..add(hours: 1);
+      dateTime = dateTime..startOf(Units.DAY);
+    }
+    return dateTime;
   }
 
   List<Widget> buildSomeCalendarDay(
@@ -134,11 +143,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         if (i == weekday) {
           items.add(someDay(currentDate));
           startDayOffset++;
-          var tempTime = currentDate;
-          currentDate = currentDate.add(Duration(days: 1));
-          if (currentDate.day == tempTime.day) {
-            currentDate = currentDate.add(Duration(hours: 1));
-          }
+          currentDate = addOffset(Jiffy(currentDate), 1).dateTime;
           weekday = currentDate.weekday == 7 ? 0 : currentDate.weekday;
         } else {
           items.add(someDayEmpty());
@@ -252,7 +257,8 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   }
 
   bool isInPast(currentDate) {
-    return currentDate.isBefore(DateTime.now());
+    DateTime startOfToday = Jiffy().startOf(Units.DAY);
+    return currentDate.isBefore(startOfToday);
   }
 
   Decoration getDecoration(currentDate) {
