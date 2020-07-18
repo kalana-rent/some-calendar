@@ -349,12 +349,19 @@ class SomeCalendarState extends State<SomeCalendar> {
         if (endRangeDate.isAtSameMomentAs(firstRangeDate)) {
           if (endRangeDate.isAfter(a)) {
             firstRangeDate = a;
+          } else if (endRangeDate.isAtSameMomentAs(a)) {
+            endRangeDate = null;
+            firstRangeDate = null;
           } else {
             endRangeDate = a;
           }
         } else if (endRangeDate.isAtSameMomentAs(a) ||
             firstRangeDate.isAtSameMomentAs(a) &&
                 (endRangeDate.day - firstRangeDate.day).abs() == 1) {
+          endRangeDate = a;
+          firstRangeDate = a;
+        } else if (firstRangeDate.isAtSameMomentAs(a) &&
+            (endRangeDate.day - firstRangeDate.day).abs() >= 1) {
           endRangeDate = a;
           firstRangeDate = a;
         } else if ((endRangeDate.day - a.day).abs() >
