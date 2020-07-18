@@ -252,7 +252,8 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   }
 
   bool isInPast(currentDate) {
-    return currentDate.isBefore(DateTime.now());
+    DateTime startOfToday = Jiffy().startOf(Units.DAY);
+    return currentDate.isBefore(startOfToday);
   }
 
   Decoration getDecoration(currentDate) {

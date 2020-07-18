@@ -416,7 +416,7 @@ class SomeCalendarState extends State<SomeCalendar> {
     }
     for (int dayOfWeek in blackoutDays) {
       for (DateTime date in dateRange) {
-        if (date.weekday == 7 ? 0 : date.weekday == dayOfWeek) {
+        if (date.weekday == 7 ? 0 == dayOfWeek : date.weekday == dayOfWeek) {
           return true;
         }
       }
@@ -436,7 +436,7 @@ class SomeCalendarState extends State<SomeCalendar> {
       }
     }
     for (int dayOfWeek in blackoutDays) {
-      if (date.weekday == 7 ? 0 : date.weekday == dayOfWeek) {
+      if (date.weekday == 7 ? 0 == dayOfWeek : date.weekday == dayOfWeek) {
         return true;
       }
     }
