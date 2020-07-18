@@ -537,6 +537,8 @@ class SomeCalendarState extends State<SomeCalendar> {
         someDateRange == null ? now.year : someDateRange.startDate.year;
     bool isFirstMonth =
         monthNum != startDate.month || yearNum != startDate.year;
+    bool isLastMonth =
+        monthNum + 1 == lastDate.month && yearNum == lastDate.year;
     return Container(
       height: heightContainer.toDouble(),
       width: MediaQuery.of(context).size.width,
@@ -563,6 +565,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.grey,
+                          width: 2,
                         ),
                         borderRadius: BorderRadius.circular(100),
                       ),
@@ -570,6 +573,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                       child: Icon(
                         Icons.arrow_back_ios,
                         color: Colors.grey,
+                        size: 20,
                       ),
                     ),
                   ),
@@ -640,26 +644,34 @@ class SomeCalendarState extends State<SomeCalendar> {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(100),
-                  onTap: () => {
-                    controller.nextPage(
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeIn),
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
+              Opacity(
+                opacity: isLastMonth ? 0 : 1,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 12.0),
+                  child: InkWell(
+                    highlightColor: isLastMonth ? Colors.transparent : null,
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: isLastMonth
+                        ? null
+                        : () => {
+                              controller.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.easeIn),
+                            },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(100),
                       ),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    padding: EdgeInsets.all(4),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
+                      padding: EdgeInsets.all(4),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.grey,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
