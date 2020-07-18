@@ -40,6 +40,7 @@ class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
               Padding(
                 padding: EdgeInsets.all(18),
                 child: SomeCalendar(
+                  scrollDirection: Axis.horizontal,
                   primaryColor: Color.fromRGBO(2, 2, 2, 1),
                   mode: SomeMode.Range,
                   isWithoutDialog: true,

@@ -271,6 +271,7 @@ class SomeCalendarState extends State<SomeCalendar> {
   void rebuildPage() {
     pageView = PageView.builder(
       controller: controller,
+      physics: NeverScrollableScrollPhysics(),
       scrollDirection: scrollDirection,
       itemCount: pagesCount,
       onPageChanged: (index) {
@@ -532,70 +533,134 @@ class SomeCalendarState extends State<SomeCalendar> {
     var heightContainer = mode == SomeMode.Range ? 55 * 6 : 55 * 6;
     int monthNum =
         someDateRange == null ? now.month : someDateRange.startDate.month;
+    int yearNum =
+        someDateRange == null ? now.year : someDateRange.startDate.year;
+    bool isFirstMonth =
+        monthNum != startDate.month || yearNum != startDate.year;
     return Container(
       height: heightContainer.toDouble(),
       width: MediaQuery.of(context).size.width,
       child: Column(
         children: <Widget>[
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: isBlackout && blackoutMonths.contains(monthNum)
-                      ? primaryColor
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(50),
-                  ),
-                ),
-                child: InkWell(
-                  onTap: isBlackout
-                      ? () => {
-                            monthCallback(monthNum),
-                          }
-                      : null,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(50),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontFamily: "playfair-regular",
-                          fontSize: 14.2,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
-                          color: isBlackout && blackoutMonths.contains(monthNum)
-                              ? Colors.white
-                              : textColor,
+              Opacity(
+                opacity: isFirstMonth ? 1 : 0,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12.0),
+                  child: InkWell(
+                    highlightColor: isFirstMonth ? Colors.transparent : null,
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: !isFirstMonth
+                        ? null
+                        : () => {
+                              controller.previousPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.easeIn),
+                            },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
                         ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: '$month',
-                          ),
-                        ],
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      padding: EdgeInsets.all(4),
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.grey,
                       ),
                     ),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
-                child: RichText(
-                  text: TextSpan(
-                    style: TextStyle(
-                        fontFamily: "playfair-regular",
-                        fontSize: 14.2,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1,
-                        color: textColor),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: '$year',
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: isBlackout && blackoutMonths.contains(monthNum)
+                          ? primaryColor
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(50),
                       ),
-                    ],
+                    ),
+                    child: InkWell(
+                      onTap: isBlackout
+                          ? () => {
+                                monthCallback(monthNum),
+                              }
+                          : null,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(50),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              fontFamily: "playfair-regular",
+                              fontSize: 14.2,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1,
+                              color: isBlackout &&
+                                      blackoutMonths.contains(monthNum)
+                                  ? Colors.white
+                                  : textColor,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: '$month',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                            fontFamily: "playfair-regular",
+                            fontSize: 14.2,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1,
+                            color: textColor),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '$year',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(100),
+                  onTap: () => {
+                    controller.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeIn),
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    padding: EdgeInsets.all(4),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),
