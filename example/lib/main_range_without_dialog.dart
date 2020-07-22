@@ -16,7 +16,6 @@ class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
     DateTime.parse('2020-07-11'),
   ];
   List<int> blackoutDays = [
-    1,
   ];
   List<int> blackoutMonths = [
     1,

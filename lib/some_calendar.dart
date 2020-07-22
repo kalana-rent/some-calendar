@@ -1,6 +1,7 @@
 library some_calendar;
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:some_calendar/some_calendar_page.dart';
 import 'package:some_calendar/some_date_range.dart';
@@ -189,36 +190,6 @@ class SomeCalendarState extends State<SomeCalendar> {
     if (blackoutColor == null) blackoutColor = Colors.grey;
     if (primaryColor == null) primaryColor = Color(0xff365535);
     if (mode == SomeMode.Range) {
-      if (selectedDates == null) {
-        firstRangeDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-        endRangeDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-      } else {
-        DateTime dateRange = now;
-        if (selectedDates.length > 0) {
-          dateRange = selectedDates[0];
-        }
-        if (dateRange.difference(startDate).inDays > 0) {
-          if (selectedDates.length > 0) {
-            firstRangeDate = Jiffy(selectedDates[0]).dateTime;
-            endRangeDate =
-                Jiffy(selectedDates[selectedDates.length - 1]).dateTime;
-          } else {
-            firstRangeDate =
-                Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-            endRangeDate =
-                Jiffy(DateTime(now.year, now.month, now.day)).add(days: 2);
-          }
-        } else if (dateRange.difference(startDate).inDays == 0) {
-          // firstRangeDate =
-          //     Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-          // endRangeDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-        } else {
-          firstRangeDate =
-              Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-          endRangeDate =
-              Jiffy(DateTime(now.year, now.month, now.day)).add(days: 2);
-        }
-      }
       dateFirstDate = Jiffy(firstRangeDate).format("dd");
       monthFirstDate = Jiffy(firstRangeDate).format("MMM");
       yearFirstDate = Jiffy(firstRangeDate).format("yyyy");
@@ -319,6 +290,25 @@ class SomeCalendarState extends State<SomeCalendar> {
     }
   }
 
+  bool isLessThan10Days(DateTime date, DateTime newDate) {
+    if (date.difference(newDate).inDays.abs() >= 10) {
+      Fluttertoast.showToast(
+        msg: 'Unable to select more then 10 days',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.grey,
+        textColor: Colors.white,
+        fontSize: 16,
+      );
+      firstRangeDate = newDate;
+      endRangeDate = newDate;
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   void onCallback(DateTime a) {
     if (mode == SomeMode.Multi) {
       if (selectedDates.contains(a))
@@ -343,34 +333,51 @@ class SomeCalendarState extends State<SomeCalendar> {
       });
     } else {
       if (endRangeDate == null && firstRangeDate == null) {
+        // first date selected
         endRangeDate = a;
         firstRangeDate = a;
       } else if (!includesBlackoutDate(a, endRangeDate, firstRangeDate)) {
         if (endRangeDate.isAtSameMomentAs(firstRangeDate)) {
           if (endRangeDate.isAfter(a)) {
-            firstRangeDate = a;
+            // Single date, a is before endDate
+            if (isLessThan10Days(endRangeDate, a)) {
+              firstRangeDate = a;
+            }
           } else if (endRangeDate.isAtSameMomentAs(a)) {
+            // Single date, a is same as endDate/firstDate
             endRangeDate = null;
             firstRangeDate = null;
           } else {
-            endRangeDate = a;
+            // Single date, a is after firstDate
+            if (isLessThan10Days(firstRangeDate, a)) {
+              endRangeDate = a;
+            }
           }
         } else if (endRangeDate.isAtSameMomentAs(a) ||
             firstRangeDate.isAtSameMomentAs(a) &&
                 (endRangeDate.day - firstRangeDate.day).abs() == 1) {
+          // a is same as endDate, and there is a range
           endRangeDate = a;
           firstRangeDate = a;
         } else if (firstRangeDate.isAtSameMomentAs(a) &&
             (endRangeDate.day - firstRangeDate.day).abs() >= 1) {
+          // a is same as firstDate, and there is a range
           endRangeDate = a;
           firstRangeDate = a;
         } else if ((endRangeDate.day - a.day).abs() >
             (firstRangeDate.day - a.day).abs()) {
-          firstRangeDate = a;
+          // a is closer to firstDate
+          if (isLessThan10Days(endRangeDate, a)) {
+            firstRangeDate = a;
+          }
         } else {
-          endRangeDate = a;
+          // a is closer to endDate
+          if (isLessThan10Days(firstRangeDate, a)) {
+            endRangeDate = a;
+          }
         }
       } else if (!isBlackoutDate(a)) {
+        // Blackout day between old dates and a
         endRangeDate = a;
         firstRangeDate = a;
       }
