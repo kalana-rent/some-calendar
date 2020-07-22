@@ -189,36 +189,6 @@ class SomeCalendarState extends State<SomeCalendar> {
     if (blackoutColor == null) blackoutColor = Colors.grey;
     if (primaryColor == null) primaryColor = Color(0xff365535);
     if (mode == SomeMode.Range) {
-      if (selectedDates == null) {
-        firstRangeDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-        endRangeDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-      } else {
-        DateTime dateRange = now;
-        if (selectedDates.length > 0) {
-          dateRange = selectedDates[0];
-        }
-        if (dateRange.difference(startDate).inDays > 0) {
-          if (selectedDates.length > 0) {
-            firstRangeDate = Jiffy(selectedDates[0]).dateTime;
-            endRangeDate =
-                Jiffy(selectedDates[selectedDates.length - 1]).dateTime;
-          } else {
-            firstRangeDate =
-                Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-            endRangeDate =
-                Jiffy(DateTime(now.year, now.month, now.day)).add(days: 2);
-          }
-        } else if (dateRange.difference(startDate).inDays == 0) {
-          // firstRangeDate =
-          //     Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-          // endRangeDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-        } else {
-          firstRangeDate =
-              Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-          endRangeDate =
-              Jiffy(DateTime(now.year, now.month, now.day)).add(days: 2);
-        }
-      }
       dateFirstDate = Jiffy(firstRangeDate).format("dd");
       monthFirstDate = Jiffy(firstRangeDate).format("MMM");
       yearFirstDate = Jiffy(firstRangeDate).format("yyyy");
