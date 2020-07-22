@@ -291,7 +291,6 @@ class SomeCalendarState extends State<SomeCalendar> {
   }
 
   bool isLessThan10Days(DateTime date, DateTime newDate) {
-    print(date.difference(newDate).inDays);
     if (date.difference(newDate).inDays.abs() >= 10) {
       Fluttertoast.showToast(
         msg: 'Unable to select more then 10 days',
