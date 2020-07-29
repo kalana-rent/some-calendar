@@ -697,6 +697,7 @@ class SomeCalendarState extends State<SomeCalendar> {
           ),
           Expanded(
             child: ListView(
+              padding: EdgeInsets.zero,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               children: <Widget>[

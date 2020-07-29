@@ -119,7 +119,11 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
       }
     }
 
-    return Column(mainAxisSize: MainAxisSize.min, children: rows);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: rows,
+    );
   }
 
   Jiffy addOffset(Jiffy dateTime, int startDayOffset) {
