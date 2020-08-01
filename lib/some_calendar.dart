@@ -293,7 +293,7 @@ class SomeCalendarState extends State<SomeCalendar> {
   }
 
   bool isLessThan10Days(DateTime date, DateTime newDate) {
-    if (date.difference(newDate).inDays.abs() >= 10) {
+    if (widget.blockManyDates && date.difference(newDate).inDays.abs() >= 10) {
       Fluttertoast.showToast(
         msg: 'Unable to select more then 10 days',
         toastLength: Toast.LENGTH_SHORT,
@@ -342,7 +342,7 @@ class SomeCalendarState extends State<SomeCalendar> {
         if (endRangeDate.isAtSameMomentAs(firstRangeDate)) {
           if (endRangeDate.isAfter(a)) {
             // Single date, a is before endDate
-            if (!widget.blockManyDates && isLessThan10Days(endRangeDate, a)) {
+            if (isLessThan10Days(endRangeDate, a)) {
               firstRangeDate = a;
             }
           } else if (endRangeDate.isAtSameMomentAs(a)) {
@@ -351,7 +351,7 @@ class SomeCalendarState extends State<SomeCalendar> {
             firstRangeDate = null;
           } else {
             // Single date, a is after firstDate
-            if (!widget.blockManyDates && isLessThan10Days(firstRangeDate, a)) {
+            if (isLessThan10Days(firstRangeDate, a)) {
               endRangeDate = a;
             }
           }
@@ -369,12 +369,12 @@ class SomeCalendarState extends State<SomeCalendar> {
         } else if ((endRangeDate.day - a.day).abs() >
             (firstRangeDate.day - a.day).abs()) {
           // a is closer to firstDate
-          if (!widget.blockManyDates && isLessThan10Days(endRangeDate, a)) {
+          if (isLessThan10Days(endRangeDate, a)) {
             firstRangeDate = a;
           }
         } else {
           // a is closer to endDate
-          if (!widget.blockManyDates && isLessThan10Days(firstRangeDate, a)) {
+          if (isLessThan10Days(firstRangeDate, a)) {
             endRangeDate = a;
           }
         }
