@@ -44,6 +44,7 @@ class SomeCalendar extends StatefulWidget {
   final Color blackoutColor;
   final bool isWithoutDialog;
   final bool isBlackout;
+  final bool blockManyDates;
 
   final Labels labels;
 
@@ -65,6 +66,7 @@ class SomeCalendar extends StatefulWidget {
     this.labels,
     this.scrollDirection,
     this.isBlackout = false,
+    this.blockManyDates = false,
   }) {
     DateTime now = Jiffy().dateTime;
     assert(mode != null);
@@ -340,7 +342,7 @@ class SomeCalendarState extends State<SomeCalendar> {
         if (endRangeDate.isAtSameMomentAs(firstRangeDate)) {
           if (endRangeDate.isAfter(a)) {
             // Single date, a is before endDate
-            if (isLessThan10Days(endRangeDate, a)) {
+            if (!widget.blockManyDates && isLessThan10Days(endRangeDate, a)) {
               firstRangeDate = a;
             }
           } else if (endRangeDate.isAtSameMomentAs(a)) {
@@ -349,7 +351,7 @@ class SomeCalendarState extends State<SomeCalendar> {
             firstRangeDate = null;
           } else {
             // Single date, a is after firstDate
-            if (isLessThan10Days(firstRangeDate, a)) {
+            if (!widget.blockManyDates && isLessThan10Days(firstRangeDate, a)) {
               endRangeDate = a;
             }
           }
@@ -367,12 +369,12 @@ class SomeCalendarState extends State<SomeCalendar> {
         } else if ((endRangeDate.day - a.day).abs() >
             (firstRangeDate.day - a.day).abs()) {
           // a is closer to firstDate
-          if (isLessThan10Days(endRangeDate, a)) {
+          if (!widget.blockManyDates && isLessThan10Days(endRangeDate, a)) {
             firstRangeDate = a;
           }
         } else {
           // a is closer to endDate
-          if (isLessThan10Days(firstRangeDate, a)) {
+          if (!widget.blockManyDates && isLessThan10Days(firstRangeDate, a)) {
             endRangeDate = a;
           }
         }
