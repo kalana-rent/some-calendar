@@ -578,13 +578,6 @@ class SomeCalendarState extends State<SomeCalendar> {
                                   curve: Curves.easeIn),
                             },
                     child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
                       padding: EdgeInsets.all(4),
                       child: Icon(
                         Icons.arrow_back_ios,
@@ -675,13 +668,6 @@ class SomeCalendarState extends State<SomeCalendar> {
                                   curve: Curves.easeIn),
                             },
                     child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
                       padding: EdgeInsets.all(4),
                       child: Icon(
                         Icons.arrow_forward_ios,
