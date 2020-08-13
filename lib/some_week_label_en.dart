@@ -12,28 +12,28 @@ class SomeWeekLabelEN extends StatelessWidget {
       children: <Widget>[
         Expanded(
             child: Text(
-          "Mon",
+          "M",
           textAlign: TextAlign.center,
           style: textStyle(),
         )),
         Expanded(
             child:
-                Text("Tue", textAlign: TextAlign.center, style: textStyle())),
+                Text("T", textAlign: TextAlign.center, style: textStyle())),
         Expanded(
             child:
-                Text("Wed", textAlign: TextAlign.center, style: textStyle())),
+                Text("W", textAlign: TextAlign.center, style: textStyle())),
         Expanded(
             child:
-                Text("Thu", textAlign: TextAlign.center, style: textStyle())),
+                Text("Th", textAlign: TextAlign.center, style: textStyle())),
         Expanded(
             child:
-                Text("Fri", textAlign: TextAlign.center, style: textStyle())),
+                Text("F", textAlign: TextAlign.center, style: textStyle())),
         Expanded(
             child:
-                Text("Sat", textAlign: TextAlign.center, style: textStyle())),
+                Text("S", textAlign: TextAlign.center, style: textStyle())),
         Expanded(
             child:
-                Text("Sun", textAlign: TextAlign.center, style: textStyle())),
+                Text("Su", textAlign: TextAlign.center, style: textStyle())),
       ],
     );
   }
