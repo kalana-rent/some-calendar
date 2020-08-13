@@ -90,7 +90,7 @@ class SomeWeekLabel extends StatelessWidget {
         color: !isBlackout ? textColor : blackoutDays.contains(i) ? Colors.white : textColor,
       );
       list.add(_weekdayContainer(
-          _localeDate.dateSymbols.STANDALONESHORTWEEKDAYS[i], textStyle, i));
+          _localeDate.dateSymbols.NARROWWEEKDAYS[i], textStyle, i));
     }
 
     return Row(children: list);
