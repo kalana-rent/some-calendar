@@ -330,7 +330,7 @@ class SomeCalendarState extends State<SomeCalendar> {
         monthFirstDate = Jiffy(selectedDate).format("MMM");
         yearFirstDate = Jiffy(selectedDate).format("yyyy");
         if (isWithoutDialog) {
-          done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+          done(selectedDate, blackoutDates, blackoutDays, blackoutMonths);
         }
       });
     } else {
