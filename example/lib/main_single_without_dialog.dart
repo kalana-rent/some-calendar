@@ -36,10 +36,17 @@ class _MainSingleWithoutDialogState extends State<MainSingleWithoutDialog> {
                   startDate: Jiffy().startOf(Units.DAY),
                   lastDate: Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH),
                   scrollDirection: Axis.horizontal,
-                  done: (selectedDates) {
+                  done: (selectedDates, blackoutDates, blackoutDays,
+                      blackoutMonths) {
                     setState(() {
                       selectedDates = selectedDates;
+                      blackoutDates = blackoutDates;
+                      blackoutDays = blackoutDays;
+                      blackoutMonths = blackoutMonths;
                       print(selectedDates);
+                      print(blackoutDates);
+                      print(blackoutDays);
+                      print(blackoutMonths);
                     });
                   },
                 ),
