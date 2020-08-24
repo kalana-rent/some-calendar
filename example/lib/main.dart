@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 selectedDate: selectedDate,
                                 startDate: new DateTime(2020, 6, 28),
                                 lastDate: Jiffy().add(months: 9),
-                                done: (date, blackoutDates, blackoutDays, blackoutMonths) {
+                                done: (date) {
                                   setState(() {
                                     selectedDate = date;
                                     showSnackbar(selectedDate.toString());
@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   dialogRangeFirstDate: 'Tanggal Pertama',
                                   dialogRangeLastDate: 'Tanggal Terakhir',
                                 ),
-                                done: (dates, blackoutDates, blackoutDays, blackoutMonths) {
+                                done: (dates) {
                                   setState(() {
                                     selectedDates = dates;
                                     showSnackbar(selectedDates.toString());
@@ -156,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 lastDate: Jiffy().add(months: 9),
                                 selectedDates: selectedDates,
                                 isWithoutDialog: false,
-                                done: (dates, blackoutDates, blackoutDays, blackoutMonths) {
+                                done: (dates) {
                                   setState(() {
                                     selectedDates = dates;
                                     showSnackbar(selectedDates.toString());

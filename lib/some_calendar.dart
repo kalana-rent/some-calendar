@@ -8,8 +8,7 @@ import 'package:some_calendar/some_date_range.dart';
 import 'package:some_calendar/some_utils.dart';
 
 typedef void OnTapFunction(DateTime date);
-typedef void OnDoneFunction(
-    selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+typedef void OnDoneFunction(selectedDates);
 
 enum SomeMode { Range, Single, Multi }
 
@@ -321,7 +320,7 @@ class SomeCalendarState extends State<SomeCalendar> {
         return a.compareTo(b);
       });
       if (isWithoutDialog) {
-        done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+        done(selectedDates);
       }
     } else if (mode == SomeMode.Single) {
       selectedDate = a;
@@ -330,7 +329,7 @@ class SomeCalendarState extends State<SomeCalendar> {
         monthFirstDate = Jiffy(selectedDate).format("MMM");
         yearFirstDate = Jiffy(selectedDate).format("yyyy");
         if (isWithoutDialog) {
-          done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+          done(selectedDates);
         }
       });
     } else {
@@ -396,7 +395,7 @@ class SomeCalendarState extends State<SomeCalendar> {
       });
 
       if (isWithoutDialog) {
-        done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+        done(selectedDates);
       }
     }
   }
@@ -485,7 +484,7 @@ class SomeCalendarState extends State<SomeCalendar> {
       });
     }
     rebuildPage();
-    done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+    done(selectedDates);
   }
 
   void monthCallback(int monthNum) {
@@ -499,7 +498,7 @@ class SomeCalendarState extends State<SomeCalendar> {
       });
     }
     rebuildPage();
-    done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+    done(selectedDates);
   }
 
   void generateListDateRange() {
@@ -869,12 +868,10 @@ class SomeCalendarState extends State<SomeCalendar> {
                     ),
                     onPressed: () {
                       if (mode == SomeMode.Multi || mode == SomeMode.Range) {
-                        done(selectedDates, blackoutDates, blackoutDays,
-                            blackoutMonths);
+                        done(selectedDates);
                         blackoutDates.clear();
                       } else if (mode == SomeMode.Single) {
-                        done(selectedDates, blackoutDates, blackoutDays,
-                            blackoutMonths);
+                        done(selectedDates);
                       }
                       Navigator.of(context).pop();
                     },

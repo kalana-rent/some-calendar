@@ -15,8 +15,7 @@ class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
     DateTime.parse('2020-07-10'),
     DateTime.parse('2020-07-11'),
   ];
-  List<int> blackoutDays = [
-  ];
+  List<int> blackoutDays = [];
   List<int> blackoutMonths = [
     1,
     8,
@@ -50,8 +49,7 @@ class _MainRangeWithoutDialogState extends State<MainRangeWithoutDialog> {
                   startDate: Jiffy().startOf(Units.MONTH),
                   lastDate: Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH),
                   isBlackout: isBlackout,
-                  done: (selectedDates, blackoutDates, blackoutDays,
-                      blackoutMonths) {
+                  done: (selectedDates) {
                     setState(() {
                       selectedDates = selectedDates;
                       blackoutDates = blackoutDates;
