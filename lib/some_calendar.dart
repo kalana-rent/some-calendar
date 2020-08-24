@@ -423,25 +423,30 @@ class SomeCalendarState extends State<SomeCalendar> {
           newDate.isAfter(endRangeDate) ? newDate : endRangeDate);
     }
 
-    for (int month in blackoutMonths) {
+    if (blackoutMonths != null)
+      for (int month in blackoutMonths) {
+        for (DateTime date in dateRange) {
+          if (date.month == month) {
+            return true;
+          }
+        }
+      }
+
+    if (blackoutDays != null)
+      for (int dayOfWeek in blackoutDays) {
+        for (DateTime date in dateRange) {
+          if (date.weekday == 7 ? 0 == dayOfWeek : date.weekday == dayOfWeek) {
+            return true;
+          }
+        }
+      }
+
+    if (dateRange != null)
       for (DateTime date in dateRange) {
-        if (date.month == month) {
+        if (blackoutDates.contains(date)) {
           return true;
         }
       }
-    }
-    for (int dayOfWeek in blackoutDays) {
-      for (DateTime date in dateRange) {
-        if (date.weekday == 7 ? 0 == dayOfWeek : date.weekday == dayOfWeek) {
-          return true;
-        }
-      }
-    }
-    for (DateTime date in dateRange) {
-      if (blackoutDates.contains(date)) {
-        return true;
-      }
-    }
     return false;
   }
 
