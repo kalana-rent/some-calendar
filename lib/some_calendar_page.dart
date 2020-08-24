@@ -90,6 +90,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
       blackoutMonths = state.blackoutMonths;
     } else if (mode == SomeMode.Single) {
       selectedDate = state.selectedDate;
+      blackoutDates = state.blackoutDates;
       blackoutDays = state.blackoutDays;
       blackoutMonths = state.blackoutMonths;
     }
