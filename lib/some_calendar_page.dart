@@ -222,7 +222,9 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   }
 
   Color getColor(currentDate) {
-    if (mode == SomeMode.Multi || mode == SomeMode.Range) {
+    if (mode == SomeMode.Multi ||
+        mode == SomeMode.Range ||
+        mode == SomeMode.Single) {
       if (selectedDates.contains(currentDate)) {
         return Colors.white;
       } else if (blackoutDates.contains(currentDate) ||
@@ -233,11 +235,13 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
       } else {
         return textColor;
       }
-    } else if (mode == SomeMode.Single) {
-      return selectedDate == currentDate
-          ? Colors.white
-          : (isWeekend(currentDate) ? textColor.withAlpha(222) : textColor);
-    } else {
+    }
+    // else if (mode == SomeMode.Single) {
+    //   return selectedDate == currentDate
+    //       ? Colors.white
+    //       : (isWeekend(currentDate) ? textColor.withAlpha(222) : textColor);
+    // }
+    else {
       return null;
     }
   }
