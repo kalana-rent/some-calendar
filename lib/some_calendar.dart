@@ -176,9 +176,10 @@ class SomeCalendarState extends State<SomeCalendar> {
         selectedDates.clear();
         selectedDates.addAll(tempListDates);
       }
-    } else {
-      selectedDate = SomeUtils.setToMidnight(selectedDate);
     }
+    // else {
+    //   selectedDate = SomeUtils.setToMidnight(selectedDate);
+    // }
     if (blackoutDates.length > 0) {
       List<DateTime> tempListDates = List();
       for (var value in blackoutDates) {
