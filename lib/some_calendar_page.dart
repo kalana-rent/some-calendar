@@ -201,7 +201,10 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
                 child: Center(
                   child: Text(
                     "${currentDate.day}",
-                    style: TextStyle(color: getColor(currentDate)),
+                    style: TextStyle(
+                      color: getColor(currentDate),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
