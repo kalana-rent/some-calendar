@@ -74,9 +74,9 @@ class SomeCalendar extends StatefulWidget {
     if (lastDate == null) lastDate = SomeUtils.getLastDateDefault();
     if (selectedDates == null) selectedDates = List();
     if (blackoutDates == null) blackoutDates = List();
-    if (selectedDate == null) {
-      selectedDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-    }
+    // if (selectedDate == null) {
+    //   selectedDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
+    // }
   }
 
   @override
