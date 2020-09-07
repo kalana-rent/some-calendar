@@ -585,7 +585,8 @@ class SomeCalendarState extends State<SomeCalendar> {
                         ? null
                         : () => {
                               updateUnavailable != null
-                                  ? updateUnavailable()
+                                  ? updateUnavailable(
+                                      month: monthNum, year: yearNum)
                                   : null,
                               controller.previousPage(
                                   duration: Duration(milliseconds: 300),
@@ -678,7 +679,8 @@ class SomeCalendarState extends State<SomeCalendar> {
                         ? null
                         : () => {
                               updateUnavailable != null
-                                  ? updateUnavailable()
+                                  ? updateUnavailable(
+                                      month: monthNum, year: yearNum)
                                   : null,
                               controller.nextPage(
                                   duration: Duration(milliseconds: 300),
