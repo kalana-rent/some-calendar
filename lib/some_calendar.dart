@@ -45,6 +45,7 @@ class SomeCalendar extends StatefulWidget {
   final bool isWithoutDialog;
   final bool isBlackout;
   final bool blockManyDates;
+  Function updateUnavailable;
 
   final Labels labels;
 
@@ -67,6 +68,7 @@ class SomeCalendar extends StatefulWidget {
     this.scrollDirection,
     this.isBlackout = false,
     this.blockManyDates = false,
+    this.updateUnavailable,
   }) {
     DateTime now = Jiffy().dateTime;
     assert(mode != null);
@@ -97,6 +99,7 @@ class SomeCalendar extends StatefulWidget {
         labels: labels,
         scrollDirection: scrollDirection,
         isBlackout: isBlackout,
+        updateUnavailable: updateUnavailable,
       );
 
   static SomeCalendarState of(BuildContext context) =>
@@ -140,6 +143,7 @@ class SomeCalendarState extends State<SomeCalendar> {
   bool isWithoutDialog;
   Axis scrollDirection;
   bool isBlackout;
+  Function updateUnavailable;
 
   Labels labels;
 
@@ -162,6 +166,7 @@ class SomeCalendarState extends State<SomeCalendar> {
     this.labels,
     this.scrollDirection,
     this.isBlackout,
+    this.updateUnavailable,
   }) {
     now = Jiffy().dateTime;
     if (scrollDirection == null) scrollDirection = Axis.vertical;
@@ -579,6 +584,9 @@ class SomeCalendarState extends State<SomeCalendar> {
                     onTap: !isFirstMonth
                         ? null
                         : () => {
+                              updateUnavailable != null
+                                  ? updateUnavailable()
+                                  : null,
                               controller.previousPage(
                                   duration: Duration(milliseconds: 300),
                                   curve: Curves.easeIn),
