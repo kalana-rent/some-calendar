@@ -677,6 +677,9 @@ class SomeCalendarState extends State<SomeCalendar> {
                     onTap: isLastMonth
                         ? null
                         : () => {
+                              updateUnavailable != null
+                                  ? updateUnavailable()
+                                  : null,
                               controller.nextPage(
                                   duration: Duration(milliseconds: 300),
                                   curve: Curves.easeIn),
