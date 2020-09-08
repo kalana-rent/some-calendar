@@ -584,10 +584,6 @@ class SomeCalendarState extends State<SomeCalendar> {
                     onTap: !isFirstMonth
                         ? null
                         : () => {
-                              updateUnavailable != null
-                                  ? updateUnavailable(
-                                      month: monthNum, year: yearNum)
-                                  : null,
                               controller.previousPage(
                                   duration: Duration(milliseconds: 300),
                                   curve: Curves.easeIn),
