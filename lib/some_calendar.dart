@@ -45,6 +45,7 @@ class SomeCalendar extends StatefulWidget {
   final bool isWithoutDialog;
   final bool isBlackout;
   final bool blockManyDates;
+  Function updateUnavailable;
 
   final Labels labels;
 
@@ -67,6 +68,7 @@ class SomeCalendar extends StatefulWidget {
     this.scrollDirection,
     this.isBlackout = false,
     this.blockManyDates = false,
+    this.updateUnavailable,
   }) {
     DateTime now = Jiffy().dateTime;
     assert(mode != null);
@@ -74,9 +76,9 @@ class SomeCalendar extends StatefulWidget {
     if (lastDate == null) lastDate = SomeUtils.getLastDateDefault();
     if (selectedDates == null) selectedDates = List();
     if (blackoutDates == null) blackoutDates = List();
-    if (selectedDate == null) {
-      selectedDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
-    }
+    // if (selectedDate == null) {
+    //   selectedDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
+    // }
   }
 
   @override
@@ -97,6 +99,7 @@ class SomeCalendar extends StatefulWidget {
         labels: labels,
         scrollDirection: scrollDirection,
         isBlackout: isBlackout,
+        updateUnavailable: updateUnavailable,
       );
 
   static SomeCalendarState of(BuildContext context) =>
@@ -140,6 +143,7 @@ class SomeCalendarState extends State<SomeCalendar> {
   bool isWithoutDialog;
   Axis scrollDirection;
   bool isBlackout;
+  Function updateUnavailable;
 
   Labels labels;
 
@@ -162,6 +166,7 @@ class SomeCalendarState extends State<SomeCalendar> {
     this.labels,
     this.scrollDirection,
     this.isBlackout,
+    this.updateUnavailable,
   }) {
     now = Jiffy().dateTime;
     if (scrollDirection == null) scrollDirection = Axis.vertical;
@@ -176,9 +181,10 @@ class SomeCalendarState extends State<SomeCalendar> {
         selectedDates.clear();
         selectedDates.addAll(tempListDates);
       }
-    } else {
-      selectedDate = SomeUtils.setToMidnight(selectedDate);
     }
+    // else {
+    //   selectedDate = SomeUtils.setToMidnight(selectedDate);
+    // }
     if (blackoutDates.length > 0) {
       List<DateTime> tempListDates = List();
       for (var value in blackoutDates) {
@@ -330,7 +336,7 @@ class SomeCalendarState extends State<SomeCalendar> {
         monthFirstDate = Jiffy(selectedDate).format("MMM");
         yearFirstDate = Jiffy(selectedDate).format("yyyy");
         if (isWithoutDialog) {
-          done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+          done(selectedDate, blackoutDates, blackoutDays, blackoutMonths);
         }
       });
     } else {
@@ -424,25 +430,30 @@ class SomeCalendarState extends State<SomeCalendar> {
           newDate.isAfter(endRangeDate) ? newDate : endRangeDate);
     }
 
-    for (int month in blackoutMonths) {
+    if (blackoutMonths != null)
+      for (int month in blackoutMonths) {
+        for (DateTime date in dateRange) {
+          if (date.month == month) {
+            return true;
+          }
+        }
+      }
+
+    if (blackoutDays != null)
+      for (int dayOfWeek in blackoutDays) {
+        for (DateTime date in dateRange) {
+          if (date.weekday == 7 ? 0 == dayOfWeek : date.weekday == dayOfWeek) {
+            return true;
+          }
+        }
+      }
+
+    if (dateRange != null)
       for (DateTime date in dateRange) {
-        if (date.month == month) {
+        if (blackoutDates.contains(date)) {
           return true;
         }
       }
-    }
-    for (int dayOfWeek in blackoutDays) {
-      for (DateTime date in dateRange) {
-        if (date.weekday == 7 ? 0 == dayOfWeek : date.weekday == dayOfWeek) {
-          return true;
-        }
-      }
-    }
-    for (DateTime date in dateRange) {
-      if (blackoutDates.contains(date)) {
-        return true;
-      }
-    }
     return false;
   }
 
@@ -663,6 +674,9 @@ class SomeCalendarState extends State<SomeCalendar> {
                     onTap: isLastMonth
                         ? null
                         : () => {
+                              updateUnavailable != null
+                                  ? updateUnavailable()
+                                  : null,
                               controller.nextPage(
                                   duration: Duration(milliseconds: 300),
                                   curve: Curves.easeIn),

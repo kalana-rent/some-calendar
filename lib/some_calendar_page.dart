@@ -90,6 +90,7 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
       blackoutMonths = state.blackoutMonths;
     } else if (mode == SomeMode.Single) {
       selectedDate = state.selectedDate;
+      blackoutDates = state.blackoutDates;
       blackoutDays = state.blackoutDays;
       blackoutMonths = state.blackoutMonths;
     }
@@ -200,7 +201,10 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
                 child: Center(
                   child: Text(
                     "${currentDate.day}",
-                    style: TextStyle(color: getColor(currentDate)),
+                    style: TextStyle(
+                      color: getColor(currentDate),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -233,9 +237,16 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
         return textColor;
       }
     } else if (mode == SomeMode.Single) {
-      return selectedDate == currentDate
-          ? Colors.white
-          : (isWeekend(currentDate) ? textColor.withAlpha(222) : textColor);
+      if (selectedDate == currentDate) {
+        return Colors.white;
+      } else if (blackoutDates.contains(currentDate) ||
+          isBlackoutDay(currentDate) ||
+          isBlackoutMonth(currentDate) ||
+          isInPast(currentDate)) {
+        return blackoutColor != null ? blackoutColor : Colors.grey;
+      } else {
+        return textColor;
+      }
     } else {
       return null;
     }
