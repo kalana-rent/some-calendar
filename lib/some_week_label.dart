@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class SomeWeekLabel extends StatelessWidget {
-  final Function onTapDayOfWeek;
-  final Color textColor;
-  final Color blackoutColor;
-  final Color primaryColor;
+  final Function? onTapDayOfWeek;
+  final Color? textColor;
+  final Color? blackoutColor;
+  final Color? primaryColor;
   final int firstDayOfWeek;
-  final List<int> blackoutDays;
-  final bool isBlackout;
+  final List<int>? blackoutDays;
+  final bool? isBlackout;
 
   const SomeWeekLabel({
-    Key key,
+    Key? key,
     this.onTapDayOfWeek,
     this.textColor,
     this.blackoutColor,
@@ -33,9 +33,9 @@ class SomeWeekLabel extends StatelessWidget {
         ),
         margin: EdgeInsets.fromLTRB(2, 0, 2, 0),
         child: InkWell(
-          onTap: isBlackout
+          onTap: isBlackout!
               ? () {
-                  onTapDayOfWeek(dayOfWeek);
+                  onTapDayOfWeek!(dayOfWeek);
                 }
               : null,
           borderRadius: BorderRadius.all(
@@ -58,7 +58,7 @@ class SomeWeekLabel extends StatelessWidget {
   }
 
   Decoration getDecoration(int dayOfWeek) {
-    if (isBlackout && blackoutDays.contains(dayOfWeek)) {
+    if (isBlackout! && blackoutDays!.contains(dayOfWeek)) {
       return BoxDecoration(
         color: primaryColor,
         borderRadius: BorderRadius.all(
@@ -87,7 +87,7 @@ class SomeWeekLabel extends StatelessWidget {
         fontSize: 14.2,
         fontWeight: FontWeight.w600,
         letterSpacing: 1,
-        color: !isBlackout ? textColor : blackoutDays.contains(i) ? Colors.white : textColor,
+        color: !isBlackout! ? textColor : blackoutDays!.contains(i) ? Colors.white : textColor,
       );
       list.add(_weekdayContainer(
           _localeDate.dateSymbols.NARROWWEEKDAYS[i], textStyle, i));
