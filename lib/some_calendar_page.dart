@@ -128,10 +128,10 @@ class _SomeCalendarPageState extends State<SomeCalendarPage> {
   }
 
   Jiffy addOffset(Jiffy dateTime, int startDayOffset) {
+    Jiffy tempTime = dateTime;
     dateTime = dateTime..add(days: startDayOffset);
-    if (dateTime.hour == 23) {
+    if (dateTime.dateTime.day == tempTime.dateTime.day) {
       dateTime = dateTime..add(hours: 1);
-      dateTime = dateTime..startOf(Units.DAY);
     }
     return dateTime;
   }
