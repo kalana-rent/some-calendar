@@ -29,28 +29,28 @@ class Labels {
 
 class SomeCalendar extends StatefulWidget {
   final SomeMode mode;
-  final OnDoneFunction done;
+  final OnDoneFunction? done;
 
-  DateTime startDate;
-  DateTime lastDate;
-  DateTime selectedDate;
-  List<DateTime> selectedDates;
-  List<DateTime> blackoutDates;
-  List<int> blackoutDays;
-  List<int> blackoutMonths;
-  final Axis scrollDirection;
-  final Color primaryColor;
-  final Color textColor;
-  final Color blackoutColor;
-  final bool isWithoutDialog;
+  DateTime? startDate;
+  DateTime? lastDate;
+  DateTime? selectedDate;
+  List<DateTime>? selectedDates;
+  List<DateTime>? blackoutDates;
+  List<int>? blackoutDays;
+  List<int>? blackoutMonths;
+  final Axis? scrollDirection;
+  final Color? primaryColor;
+  final Color? textColor;
+  final Color? blackoutColor;
+  final bool? isWithoutDialog;
   final bool isBlackout;
   final bool blockManyDates;
 
-  final Labels labels;
+  final Labels? labels;
 
   SomeCalendar({
-    Key key,
-    @required this.mode,
+    Key? key,
+    required this.mode,
     this.startDate,
     this.lastDate,
     this.done,
@@ -72,8 +72,8 @@ class SomeCalendar extends StatefulWidget {
     assert(mode != null);
     if (startDate == null) startDate = SomeUtils.getStartDateDefault();
     if (lastDate == null) lastDate = SomeUtils.getLastDateDefault();
-    if (selectedDates == null) selectedDates = List();
-    if (blackoutDates == null) blackoutDates = List();
+    if (selectedDates == null) selectedDates = [];
+    if (blackoutDates == null) blackoutDates = [];
     if (selectedDate == null) {
       selectedDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
     }
@@ -89,7 +89,7 @@ class SomeCalendar extends StatefulWidget {
         blackoutColor: blackoutColor,
         selectedDates: selectedDates,
         selectedDate: selectedDate,
-        blackoutDates: blackoutDates,
+        blackoutDates: blackoutDates!,
         blackoutDays: blackoutDays,
         blackoutMonths: blackoutMonths,
         primaryColor: primaryColor,
@@ -99,59 +99,59 @@ class SomeCalendar extends StatefulWidget {
         isBlackout: isBlackout,
       );
 
-  static SomeCalendarState of(BuildContext context) =>
+  static SomeCalendarState? of(BuildContext context) =>
       context.findAncestorStateOfType();
 }
 
 class SomeCalendarState extends State<SomeCalendar> {
-  final OnDoneFunction done;
+  final OnDoneFunction? done;
 
-  DateTime startDate;
-  DateTime lastDate;
-  SomeMode mode;
+  DateTime? startDate;
+  DateTime? lastDate;
+  SomeMode? mode;
 
-  PageView pageView;
-  PageController controller;
+  PageView? pageView;
+  PageController? controller;
 
-  int pagesCount;
-  String month;
-  String year;
+  int? pagesCount;
+  String? month;
+  String? year;
 
-  String monthFirstDate;
-  String yearFirstDate;
-  String dateFirstDate;
+  String? monthFirstDate;
+  String? yearFirstDate;
+  String? dateFirstDate;
 
-  String monthEndDate;
-  String yearEndDate;
-  String dateEndDate;
+  String? monthEndDate;
+  String? yearEndDate;
+  String? dateEndDate;
 
-  List<DateTime> selectedDates;
-  DateTime selectedDate;
-  DateTime firstRangeDate;
-  DateTime endRangeDate;
+  List<DateTime?>? selectedDates;
+  DateTime? selectedDate;
+  DateTime? firstRangeDate;
+  DateTime? endRangeDate;
   List<DateTime> blackoutDates;
-  List<int> blackoutDays;
-  List<int> blackoutMonths;
+  List<int>? blackoutDays;
+  List<int>? blackoutMonths;
 
-  DateTime now;
-  Color primaryColor;
-  Color textColor;
-  Color blackoutColor;
-  bool isWithoutDialog;
-  Axis scrollDirection;
-  bool isBlackout;
+  late DateTime now;
+  Color? primaryColor;
+  Color? textColor;
+  Color? blackoutColor;
+  bool? isWithoutDialog;
+  Axis? scrollDirection;
+  bool? isBlackout;
 
-  Labels labels;
+  Labels? labels;
 
-  SomeDateRange someDateRange;
+  SomeDateRange? someDateRange;
 
   SomeCalendarState({
-    @required this.done,
+    required this.done,
     this.startDate,
     this.lastDate,
     this.selectedDate,
     this.selectedDates,
-    this.blackoutDates,
+    required this.blackoutDates,
     this.blackoutDays,
     this.blackoutMonths,
     this.mode,
@@ -168,19 +168,19 @@ class SomeCalendarState extends State<SomeCalendar> {
     if (isWithoutDialog == null) isWithoutDialog = true;
     if (labels == null) labels = new Labels();
     if (mode == SomeMode.Multi || mode == SomeMode.Range) {
-      if (selectedDates.length > 0) {
-        List<DateTime> tempListDates = List();
-        for (var value in selectedDates) {
-          tempListDates.add(SomeUtils.setToMidnight(value));
+      if (selectedDates!.length > 0) {
+        List<DateTime> tempListDates = [];
+        for (var value in selectedDates!) {
+          tempListDates.add(SomeUtils.setToMidnight(value!));
         }
-        selectedDates.clear();
-        selectedDates.addAll(tempListDates);
+        selectedDates!.clear();
+        selectedDates!.addAll(tempListDates);
       }
     } else {
-      selectedDate = SomeUtils.setToMidnight(selectedDate);
+      selectedDate = SomeUtils.setToMidnight(selectedDate!);
     }
     if (blackoutDates.length > 0) {
-      List<DateTime> tempListDates = List();
+      List<DateTime> tempListDates = [];
       for (var value in blackoutDates) {
         tempListDates.add(SomeUtils.setToMidnight(value));
       }
@@ -199,18 +199,18 @@ class SomeCalendarState extends State<SomeCalendar> {
       dateEndDate = Jiffy(endRangeDate).format("dd");
       monthEndDate = Jiffy(endRangeDate).format("MMM");
       yearEndDate = Jiffy(endRangeDate).format("yyyy");
-      if (selectedDates.length <= 0)
+      if (selectedDates!.length <= 0)
         generateListDateRange();
       else {
-        var diff = selectedDates[selectedDates.length - 1]
-                .difference(selectedDates[0])
+        var diff = selectedDates![selectedDates!.length - 1]!
+                .difference(selectedDates![0]!)
                 .inDays +
             1;
-        var date = selectedDates[0];
-        selectedDates.clear();
+        var date = selectedDates![0];
+        selectedDates!.clear();
         for (int i = 0; i < diff; i++) {
-          selectedDates.add(date);
-          date = Jiffy(date).add(days: 1);
+          selectedDates!.add(date);
+          date = Jiffy(date).add(days: 1) as DateTime;
         }
       }
     } else {
@@ -224,9 +224,9 @@ class SomeCalendarState extends State<SomeCalendar> {
   void initState() {
     month = monthFirstDate;
     year = yearFirstDate;
-    startDate = SomeUtils.setToMidnight(startDate);
-    lastDate = SomeUtils.setToMidnight(lastDate);
-    pagesCount = SomeUtils.getCountFromDiffDate(startDate, lastDate);
+    startDate = SomeUtils.setToMidnight(startDate!);
+    lastDate = SomeUtils.setToMidnight(lastDate!);
+    pagesCount = SomeUtils.getCountFromDiffDate(startDate!, lastDate!);
     controller =
         PageController(keepPage: false, initialPage: getInitialController());
     rebuildPage();
@@ -235,7 +235,7 @@ class SomeCalendarState extends State<SomeCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    if (isWithoutDialog)
+    if (isWithoutDialog!)
       return withoutDialog();
     else
       return show();
@@ -245,20 +245,20 @@ class SomeCalendarState extends State<SomeCalendar> {
     pageView = PageView.builder(
       controller: controller,
       physics: NeverScrollableScrollPhysics(),
-      scrollDirection: scrollDirection,
+      scrollDirection: scrollDirection!,
       itemCount: pagesCount,
       onPageChanged: (index) {
         someDateRange = getDateRange(index);
         setState(() {
           someDateRange = someDateRange;
           if (mode == SomeMode.Multi) {
-            monthFirstDate = Jiffy(someDateRange.startDate).format("MMM");
-            yearFirstDate = Jiffy(someDateRange.startDate).format("yyyy");
-            month = Jiffy(someDateRange.startDate).format("MMM");
-            year = Jiffy(someDateRange.startDate).format("yyyy");
+            monthFirstDate = Jiffy(someDateRange!.startDate).format("MMM");
+            yearFirstDate = Jiffy(someDateRange!.startDate).format("yyyy");
+            month = Jiffy(someDateRange!.startDate).format("MMM");
+            year = Jiffy(someDateRange!.startDate).format("yyyy");
           } else if (mode == SomeMode.Range || mode == SomeMode.Single) {
-            month = Jiffy(someDateRange.startDate).format("MMM");
-            year = Jiffy(someDateRange.startDate).format("yyyy");
+            month = Jiffy(someDateRange!.startDate).format("MMM");
+            year = Jiffy(someDateRange!.startDate).format("yyyy");
           }
         });
       },
@@ -283,17 +283,17 @@ class SomeCalendarState extends State<SomeCalendar> {
 
   int getInitialController() {
     if (selectedDate == null) {
-      return SomeUtils.getDiffMonth(startDate, Jiffy().dateTime);
+      return SomeUtils.getDiffMonth(startDate!, Jiffy().dateTime);
     } else {
-      if (selectedDate.difference(startDate).inDays >= 0)
-        return SomeUtils.getDiffMonth(startDate, selectedDate);
+      if (selectedDate!.difference(startDate!).inDays >= 0)
+        return SomeUtils.getDiffMonth(startDate!, selectedDate!);
       else
-        return SomeUtils.getDiffMonth(startDate, Jiffy().dateTime);
+        return SomeUtils.getDiffMonth(startDate!, Jiffy().dateTime);
     }
   }
 
-  bool isLessThan10Days(DateTime date, DateTime newDate) {
-    if (widget.blockManyDates && date.difference(newDate).inDays.abs() >= 10) {
+  bool isLessThan10Days(DateTime? date, DateTime newDate) {
+    if (widget.blockManyDates && date!.difference(newDate).inDays.abs() >= 10) {
       Fluttertoast.showToast(
         msg: 'Unable to select more then 10 days',
         toastLength: Toast.LENGTH_SHORT,
@@ -313,15 +313,15 @@ class SomeCalendarState extends State<SomeCalendar> {
 
   void onCallback(DateTime a) {
     if (mode == SomeMode.Multi) {
-      if (selectedDates.contains(a))
-        selectedDates.remove(a);
+      if (selectedDates!.contains(a))
+        selectedDates!.remove(a);
       else
-        selectedDates.add(a);
-      selectedDates.sort((a, b) {
-        return a.compareTo(b);
+        selectedDates!.add(a);
+      selectedDates!.sort((a, b) {
+        return a!.compareTo(b!);
       });
-      if (isWithoutDialog) {
-        done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+      if (isWithoutDialog!) {
+        done!(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
       }
     } else if (mode == SomeMode.Single) {
       selectedDate = a;
@@ -329,8 +329,8 @@ class SomeCalendarState extends State<SomeCalendar> {
         dateFirstDate = Jiffy(selectedDate).format("dd");
         monthFirstDate = Jiffy(selectedDate).format("MMM");
         yearFirstDate = Jiffy(selectedDate).format("yyyy");
-        if (isWithoutDialog) {
-          done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+        if (isWithoutDialog!) {
+          done!(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
         }
       });
     } else {
@@ -339,13 +339,13 @@ class SomeCalendarState extends State<SomeCalendar> {
         endRangeDate = a;
         firstRangeDate = a;
       } else if (!includesBlackoutDate(a, endRangeDate, firstRangeDate)) {
-        if (endRangeDate.isAtSameMomentAs(firstRangeDate)) {
-          if (endRangeDate.isAfter(a)) {
+        if (endRangeDate!.isAtSameMomentAs(firstRangeDate!)) {
+          if (endRangeDate!.isAfter(a)) {
             // Single date, a is before endDate
             if (isLessThan10Days(endRangeDate, a)) {
               firstRangeDate = a;
             }
-          } else if (endRangeDate.isAtSameMomentAs(a)) {
+          } else if (endRangeDate!.isAtSameMomentAs(a)) {
             // Single date, a is same as endDate/firstDate
             endRangeDate = null;
             firstRangeDate = null;
@@ -355,19 +355,19 @@ class SomeCalendarState extends State<SomeCalendar> {
               endRangeDate = a;
             }
           }
-        } else if (endRangeDate.isAtSameMomentAs(a) ||
-            firstRangeDate.isAtSameMomentAs(a) &&
-                (endRangeDate.day - firstRangeDate.day).abs() == 1) {
+        } else if (endRangeDate!.isAtSameMomentAs(a) ||
+            firstRangeDate!.isAtSameMomentAs(a) &&
+                (endRangeDate!.day - firstRangeDate!.day).abs() == 1) {
           // a is same as endDate, and there is a range
           endRangeDate = a;
           firstRangeDate = a;
-        } else if (firstRangeDate.isAtSameMomentAs(a) &&
-            (endRangeDate.day - firstRangeDate.day).abs() >= 1) {
+        } else if (firstRangeDate!.isAtSameMomentAs(a) &&
+            (endRangeDate!.day - firstRangeDate!.day).abs() >= 1) {
           // a is same as firstDate, and there is a range
           endRangeDate = a;
           firstRangeDate = a;
-        } else if ((endRangeDate.day - a.day).abs() >
-            (firstRangeDate.day - a.day).abs()) {
+        } else if ((endRangeDate!.day - a.day).abs() >
+            (firstRangeDate!.day - a.day).abs()) {
           // a is closer to firstDate
           if (isLessThan10Days(endRangeDate, a)) {
             firstRangeDate = a;
@@ -383,9 +383,9 @@ class SomeCalendarState extends State<SomeCalendar> {
         endRangeDate = a;
         firstRangeDate = a;
       }
-      selectedDates.clear();
+      selectedDates!.clear();
       generateListDateRange();
-      selectedDates.sort((a, b) => a.compareTo(b));
+      selectedDates!.sort((a, b) => a!.compareTo(b!));
       setState(() {
         dateFirstDate = Jiffy(firstRangeDate).format("dd");
         monthFirstDate = Jiffy(firstRangeDate).format("MMM");
@@ -395,8 +395,8 @@ class SomeCalendarState extends State<SomeCalendar> {
         yearEndDate = Jiffy(endRangeDate).format("yyyy");
       });
 
-      if (isWithoutDialog) {
-        done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+      if (isWithoutDialog!) {
+        done!(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
       }
     }
   }
@@ -413,7 +413,7 @@ class SomeCalendarState extends State<SomeCalendar> {
       updateFirst = true;
     }
 
-    List<DateTime> dateRange = [];
+    List<DateTime?> dateRange = [];
     if (updateFirst) {
       dateRange = generateDateRange(
           newDate.isBefore(firstRangeDate) ? newDate : firstRangeDate,
@@ -424,21 +424,21 @@ class SomeCalendarState extends State<SomeCalendar> {
           newDate.isAfter(endRangeDate) ? newDate : endRangeDate);
     }
 
-    for (int month in blackoutMonths) {
-      for (DateTime date in dateRange) {
-        if (date.month == month) {
+    for (int month in blackoutMonths!) {
+      for (DateTime? date in dateRange) {
+        if (date!.month == month) {
           return true;
         }
       }
     }
-    for (int dayOfWeek in blackoutDays) {
-      for (DateTime date in dateRange) {
-        if (date.weekday == 7 ? 0 == dayOfWeek : date.weekday == dayOfWeek) {
+    for (int dayOfWeek in blackoutDays!) {
+      for (DateTime? date in dateRange) {
+        if (date!.weekday == 7 ? 0 == dayOfWeek : date.weekday == dayOfWeek) {
           return true;
         }
       }
     }
-    for (DateTime date in dateRange) {
+    for (DateTime? date in dateRange) {
       if (blackoutDates.contains(date)) {
         return true;
       }
@@ -447,12 +447,12 @@ class SomeCalendarState extends State<SomeCalendar> {
   }
 
   bool isBlackoutDate(DateTime date) {
-    for (int month in blackoutMonths) {
+    for (int month in blackoutMonths!) {
       if (date.month == month) {
         return true;
       }
     }
-    for (int dayOfWeek in blackoutDays) {
+    for (int dayOfWeek in blackoutDays!) {
       if (date.weekday == 7 ? 0 == dayOfWeek : date.weekday == dayOfWeek) {
         return true;
       }
@@ -463,78 +463,78 @@ class SomeCalendarState extends State<SomeCalendar> {
     return false;
   }
 
-  List<DateTime> generateDateRange(firstDate, lastDate) {
-    List<DateTime> dates = [];
+  List<DateTime?> generateDateRange(firstDate, lastDate) {
+    List<DateTime?> dates = [];
     int diff = lastDate.difference(firstDate).inDays.abs() + 1;
-    DateTime date = firstDate;
+    DateTime? date = firstDate;
     for (int i = 0; i < diff; i++) {
       dates.add(date);
-      date = Jiffy(date).add(days: 1);
+      date = Jiffy(date).add(days: 1) as DateTime;
     }
     return dates;
   }
 
   void dayOfWeekCallback(int dayOfWeek) {
-    if (blackoutDays.contains(dayOfWeek)) {
+    if (blackoutDays!.contains(dayOfWeek)) {
       setState(() {
-        blackoutDays.remove(dayOfWeek);
+        blackoutDays!.remove(dayOfWeek);
       });
     } else {
       setState(() {
-        blackoutDays.add(dayOfWeek);
+        blackoutDays!.add(dayOfWeek);
       });
     }
     rebuildPage();
-    done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+    done!(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
   }
 
   void monthCallback(int monthNum) {
-    if (blackoutMonths.contains(monthNum)) {
+    if (blackoutMonths!.contains(monthNum)) {
       setState(() {
-        blackoutMonths.remove(monthNum);
+        blackoutMonths!.remove(monthNum);
       });
     } else {
       setState(() {
-        blackoutMonths.add(monthNum);
+        blackoutMonths!.add(monthNum);
       });
     }
     rebuildPage();
-    done(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
+    done!(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
   }
 
   void generateListDateRange() {
     if (firstRangeDate != null && endRangeDate != null) {
-      var diff = endRangeDate.difference(firstRangeDate).inDays + 1;
+      var diff = endRangeDate!.difference(firstRangeDate!).inDays + 1;
       var date = firstRangeDate;
       for (int i = 0; i < diff; i++) {
-        selectedDates.add(date);
-        date = Jiffy(date).add(days: 1);
+        selectedDates!.add(date);
+        date = Jiffy(date).add(days: 1) as DateTime;
       }
     }
   }
 
   SomeDateRange getDateRange(int position) {
-    DateTime pageStartDate;
-    DateTime pageEndDate;
+    DateTime? pageStartDate;
+    DateTime? pageEndDate;
 
     if (position == 0) {
       pageStartDate = startDate;
-      if (pagesCount <= 1) {
+      if (pagesCount! <= 1) {
         pageEndDate = lastDate;
       } else {
-        var last = Jiffy(DateTime(startDate.year, startDate.month))
+        var last = Jiffy(DateTime(startDate!.year, startDate!.month))
           ..add(months: 1);
         var lastDayOfMonth = last..subtract(days: 1);
         pageEndDate = lastDayOfMonth.dateTime;
       }
-    } else if (position == pagesCount - 1) {
-      var start = Jiffy(DateTime(lastDate.year, lastDate.month))
+    } else if (position == pagesCount! - 1) {
+      var start = Jiffy(DateTime(lastDate!.year, lastDate!.month))
         ..subtract(months: 1);
       pageStartDate = start.dateTime;
-      pageEndDate = Jiffy(lastDate).subtract(days: 1);
+      pageEndDate = Jiffy(lastDate).subtract(days: 1) as DateTime;
     } else {
       var firstDateOfCurrentMonth =
-          Jiffy(DateTime(startDate.year, startDate.month))
+          Jiffy(DateTime(startDate!.year, startDate!.month))
             ..add(months: position);
       pageStartDate = firstDateOfCurrentMonth.dateTime;
       var a = firstDateOfCurrentMonth
@@ -548,13 +548,13 @@ class SomeCalendarState extends State<SomeCalendar> {
   withoutDialog() {
     var heightContainer = mode == SomeMode.Range ? 55 * 6 : 55 * 6;
     int monthNum =
-        someDateRange == null ? now.month : someDateRange.startDate.month;
+        someDateRange == null ? now.month : someDateRange!.startDate!.month;
     int yearNum =
-        someDateRange == null ? now.year : someDateRange.startDate.year;
+        someDateRange == null ? now.year : someDateRange!.startDate!.year;
     bool isFirstMonth =
-        monthNum != startDate.month || yearNum != startDate.year;
+        monthNum != startDate!.month || yearNum != startDate!.year;
     bool isLastMonth =
-        monthNum + 1 == lastDate.month && yearNum == lastDate.year;
+        monthNum + 1 == lastDate!.month && yearNum == lastDate!.year;
     return Container(
       height: heightContainer.toDouble(),
       width: MediaQuery.of(context).size.width,
@@ -573,7 +573,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                     onTap: !isFirstMonth
                         ? null
                         : () => {
-                              controller.previousPage(
+                              controller!.previousPage(
                                   duration: Duration(milliseconds: 300),
                                   curve: Curves.easeIn),
                             },
@@ -593,7 +593,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: isBlackout && blackoutMonths.contains(monthNum)
+                      color: isBlackout! && blackoutMonths!.contains(monthNum)
                           ? primaryColor
                           : Colors.transparent,
                       borderRadius: BorderRadius.all(
@@ -601,7 +601,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                       ),
                     ),
                     child: InkWell(
-                      onTap: isBlackout
+                      onTap: isBlackout!
                           ? () => {
                                 monthCallback(monthNum),
                               }
@@ -618,8 +618,8 @@ class SomeCalendarState extends State<SomeCalendar> {
                               fontSize: 14.2,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 1,
-                              color: isBlackout &&
-                                      blackoutMonths.contains(monthNum)
+                              color: isBlackout! &&
+                                      blackoutMonths!.contains(monthNum)
                                   ? Colors.white
                                   : textColor,
                             ),
@@ -663,7 +663,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                     onTap: isLastMonth
                         ? null
                         : () => {
-                              controller.nextPage(
+                              controller!.nextPage(
                                   duration: Duration(milliseconds: 300),
                                   curve: Curves.easeIn),
                             },
@@ -719,7 +719,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            labels.dialogRangeFirstDate,
+                            labels!.dialogRangeFirstDate,
                             style: TextStyle(
                                 fontFamily: "playfair-regular",
                                 fontSize: 12,
@@ -746,7 +746,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            labels.dialogRangeLastDate,
+                            labels!.dialogRangeLastDate,
                             style: TextStyle(
                                 fontFamily: "playfair-regular",
                                 fontSize: 12,
@@ -759,7 +759,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                             "$dateEndDate $monthEndDate, $yearEndDate",
                             style: TextStyle(
                                 fontFamily: "playfair-regular",
-                                color: textColor.withAlpha(150),
+                                color: textColor!.withAlpha(150),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18),
                           ),
@@ -869,11 +869,11 @@ class SomeCalendarState extends State<SomeCalendar> {
                     ),
                     onPressed: () {
                       if (mode == SomeMode.Multi || mode == SomeMode.Range) {
-                        done(selectedDates, blackoutDates, blackoutDays,
+                        done!(selectedDates, blackoutDates, blackoutDays,
                             blackoutMonths);
                         blackoutDates.clear();
                       } else if (mode == SomeMode.Single) {
-                        done(selectedDates, blackoutDates, blackoutDays,
+                        done!(selectedDates, blackoutDates, blackoutDays,
                             blackoutMonths);
                       }
                       Navigator.of(context).pop();
@@ -881,7 +881,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                     child: Padding(
                       padding: EdgeInsets.only(top: 8, bottom: 8),
                       child: Text(
-                        labels.dialogDone,
+                        labels!.dialogDone,
                         style: TextStyle(
                             fontFamily: "Avenir",
                             fontSize: 14,
@@ -902,7 +902,7 @@ class SomeCalendarState extends State<SomeCalendar> {
                   child: Padding(
                     padding: EdgeInsets.only(top: 8, bottom: 8),
                     child: Text(
-                      labels.dialogCancel,
+                      labels!.dialogCancel,
                       style: TextStyle(
                           fontFamily: "Avenir",
                           fontSize: 14,
