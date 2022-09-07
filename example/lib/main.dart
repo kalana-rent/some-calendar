@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text("Single"),
                     onPressed: () {
                       showDialog(
@@ -102,8 +102,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                 isWithoutDialog: false,
                                 selectedDate: selectedDate,
                                 startDate: new DateTime(2020, 6, 28),
-                                lastDate: Jiffy().add(months: 9),
-                                done: (date, blackoutDates, blackoutDays, blackoutMonths) {
+                                lastDate:
+                                    DateTime.now().add(Duration(days: 9 * 30)),
+                                done: (date, blackoutDates, blackoutDays,
+                                    blackoutMonths) {
                                   setState(() {
                                     selectedDate = date;
                                     showSnackbar(selectedDate.toString());
@@ -112,15 +114,17 @@ class _MyHomePageState extends State<MyHomePage> {
                               ));
                     },
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text("Multi"),
                     onPressed: () {
                       showDialog(
                           context: context,
                           builder: (_) => SomeCalendar(
                                 mode: SomeMode.Multi,
-                                startDate: Jiffy().subtract(years: 3),
-                                lastDate: Jiffy().add(months: 9),
+                                startDate: DateTime.now().subtract(Duration(
+                                    days: 365 * 3)), // subtract 3 years
+                                lastDate: DateTime.now().add(
+                                    Duration(days: 9 * 30)), // add 9 months
                                 isWithoutDialog: false,
                                 selectedDates: selectedDates,
                                 labels: new Labels(
@@ -129,7 +133,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   dialogRangeFirstDate: 'Tanggal Pertama',
                                   dialogRangeLastDate: 'Tanggal Terakhir',
                                 ),
-                                done: (dates, blackoutDates, blackoutDays, blackoutMonths) {
+                                done: (dates, blackoutDates, blackoutDays,
+                                    blackoutMonths) {
                                   setState(() {
                                     selectedDates = dates;
                                     showSnackbar(selectedDates.toString());
@@ -138,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ));
                     },
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text("Range"),
                     onPressed: () {
                       showDialog(
@@ -152,11 +157,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                   dialogRangeLastDate: 'Tanggal Terakhir',
                                 ),
                                 primaryColor: Color(0xff5833A5),
-                                startDate: Jiffy().subtract(years: 3),
-                                lastDate: Jiffy().add(months: 9),
+                                startDate: DateTime.now().subtract(Duration(
+                                    days: 365 * 3)), // subtract 3 years
+                                lastDate: DateTime.now().add(
+                                    Duration(days: 9 * 30)), // add 9 months
                                 selectedDates: selectedDates,
                                 isWithoutDialog: false,
-                                done: (dates, blackoutDates, blackoutDays, blackoutMonths) {
+                                done: (dates, blackoutDates, blackoutDays,
+                                    blackoutMonths) {
                                   setState(() {
                                     selectedDates = dates;
                                     showSnackbar(selectedDates.toString());
@@ -182,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text("Single "),
                     onPressed: () {
                       Navigator.push(
@@ -192,7 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     },
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text("Multi "),
                     onPressed: () {
                       Navigator.push(
@@ -202,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     },
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text("Range"),
                     onPressed: () {
                       Navigator.push(
@@ -222,7 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void showSnackbar(String x) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(x),
     ));
   }

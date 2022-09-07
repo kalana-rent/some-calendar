@@ -20,8 +20,7 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH).toIso8601String());
+    print(DateTime.now().add(Duration(days: 365)).toIso8601String());
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -41,8 +40,8 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
                   blackoutDates: blackoutDates,
                   blackoutDays: blackoutDays,
                   blackoutMonths: blackoutMonths,
-                  startDate: Jiffy().startOf(Units.MONTH),
-                  lastDate: Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH),
+                  startDate: DateTime.now(),
+                  lastDate: DateTime.now().add(Duration(days: 365)),
                   isBlackout: isBlackout,
                   done: (selectedDates, blackoutDates, blackoutDays,
                       blackoutMonths) {
@@ -68,7 +67,7 @@ class _MainMultiWithoutDialogState extends State<MainMultiWithoutDialog> {
   }
 
   void showSnackbar(String x) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(x),
     ));
   }

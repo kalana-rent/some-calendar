@@ -1,13 +1,11 @@
-import 'package:jiffy/jiffy.dart';
-
 class SomeUtils {
   static DateTime getStartDateDefault() {
-    var now = Jiffy();
-    return DateTime(now.year, now.month, now.date);
+    var now = DateTime.now();
+    return DateTime(now.year, now.month, now.day);
   }
 
   static DateTime getLastDateDefault() {
-    var now = Jiffy()..add(months: 2);
+    var now = DateTime.now().add(Duration(days: 60));
     return DateTime(now.year, now.month);
   }
 

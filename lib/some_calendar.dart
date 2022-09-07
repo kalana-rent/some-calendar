@@ -2,7 +2,7 @@ library some_calendar;
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:jiffy/jiffy.dart';
+import 'package:intl/intl.dart';
 import 'package:some_calendar/some_calendar_page.dart';
 import 'package:some_calendar/some_date_range.dart';
 import 'package:some_calendar/some_utils.dart';
@@ -68,14 +68,14 @@ class SomeCalendar extends StatefulWidget {
     this.isBlackout = false,
     this.blockManyDates = false,
   }) {
-    DateTime now = Jiffy().dateTime;
+    DateTime now = DateTime.now();
     assert(mode != null);
     if (startDate == null) startDate = SomeUtils.getStartDateDefault();
     if (lastDate == null) lastDate = SomeUtils.getLastDateDefault();
     if (selectedDates == null) selectedDates = [];
     if (blackoutDates == null) blackoutDates = [];
     if (selectedDate == null) {
-      selectedDate = Jiffy(DateTime(now.year, now.month, now.day)).dateTime;
+      selectedDate = now;
     }
   }
 
@@ -163,7 +163,7 @@ class SomeCalendarState extends State<SomeCalendar> {
     this.scrollDirection,
     this.isBlackout,
   }) {
-    now = Jiffy().dateTime;
+    now = DateTime.now();
     if (scrollDirection == null) scrollDirection = Axis.vertical;
     if (isWithoutDialog == null) isWithoutDialog = true;
     if (labels == null) labels = new Labels();
@@ -192,13 +192,13 @@ class SomeCalendarState extends State<SomeCalendar> {
     if (blackoutColor == null) blackoutColor = Colors.grey;
     if (primaryColor == null) primaryColor = Color(0xff365535);
     if (mode == SomeMode.Range) {
-      dateFirstDate = Jiffy(firstRangeDate).format("dd");
-      monthFirstDate = Jiffy(firstRangeDate).format("MMM");
-      yearFirstDate = Jiffy(firstRangeDate).format("yyyy");
+      dateFirstDate = DateFormat('dd').format(firstRangeDate!);
+      monthFirstDate = DateFormat.MMM().format(firstRangeDate!);
+      yearFirstDate = DateFormat('yyyy').format(firstRangeDate!);
 
-      dateEndDate = Jiffy(endRangeDate).format("dd");
-      monthEndDate = Jiffy(endRangeDate).format("MMM");
-      yearEndDate = Jiffy(endRangeDate).format("yyyy");
+      dateEndDate = DateFormat('dd').format(endRangeDate!);
+      monthEndDate = DateFormat.MMM().format(endRangeDate!);
+      yearEndDate = DateFormat('yyyy').format(endRangeDate!);
       if (selectedDates!.length <= 0)
         generateListDateRange();
       else {
@@ -210,13 +210,13 @@ class SomeCalendarState extends State<SomeCalendar> {
         selectedDates!.clear();
         for (int i = 0; i < diff; i++) {
           selectedDates!.add(date);
-          date = Jiffy(date).add(days: 1) as DateTime;
+          date = date?.add(Duration(days: 1));
         }
       }
     } else {
-      dateFirstDate = Jiffy(selectedDate).format("dd");
-      monthFirstDate = Jiffy(selectedDate).format("MMM");
-      yearFirstDate = Jiffy(selectedDate).format("yyyy");
+      dateFirstDate = DateFormat("dd").format(selectedDate!);
+      monthFirstDate = DateFormat("MMM").format(selectedDate!);
+      yearFirstDate = DateFormat("yyyy").format(selectedDate!);
     }
   }
 
@@ -252,13 +252,15 @@ class SomeCalendarState extends State<SomeCalendar> {
         setState(() {
           someDateRange = someDateRange;
           if (mode == SomeMode.Multi) {
-            monthFirstDate = Jiffy(someDateRange!.startDate).format("MMM");
-            yearFirstDate = Jiffy(someDateRange!.startDate).format("yyyy");
-            month = Jiffy(someDateRange!.startDate).format("MMM");
-            year = Jiffy(someDateRange!.startDate).format("yyyy");
+            monthFirstDate =
+                DateFormat("MMM").format(someDateRange!.startDate!);
+            yearFirstDate =
+                DateFormat("yyyy").format(someDateRange!.startDate!);
+            month = DateFormat("MMM").format(someDateRange!.startDate!);
+            year = DateFormat("yyyy").format(someDateRange!.startDate!);
           } else if (mode == SomeMode.Range || mode == SomeMode.Single) {
-            month = Jiffy(someDateRange!.startDate).format("MMM");
-            year = Jiffy(someDateRange!.startDate).format("yyyy");
+            month = DateFormat("MMM").format(someDateRange!.startDate!);
+            year = DateFormat("yyyy").format(someDateRange!.startDate!);
           }
         });
       },
@@ -283,12 +285,12 @@ class SomeCalendarState extends State<SomeCalendar> {
 
   int getInitialController() {
     if (selectedDate == null) {
-      return SomeUtils.getDiffMonth(startDate!, Jiffy().dateTime);
+      return SomeUtils.getDiffMonth(startDate!, DateTime.now());
     } else {
       if (selectedDate!.difference(startDate!).inDays >= 0)
         return SomeUtils.getDiffMonth(startDate!, selectedDate!);
       else
-        return SomeUtils.getDiffMonth(startDate!, Jiffy().dateTime);
+        return SomeUtils.getDiffMonth(startDate!, DateTime.now());
     }
   }
 
@@ -326,9 +328,9 @@ class SomeCalendarState extends State<SomeCalendar> {
     } else if (mode == SomeMode.Single) {
       selectedDate = a;
       setState(() {
-        dateFirstDate = Jiffy(selectedDate).format("dd");
-        monthFirstDate = Jiffy(selectedDate).format("MMM");
-        yearFirstDate = Jiffy(selectedDate).format("yyyy");
+        dateFirstDate = DateFormat("dd").format(selectedDate!);
+        monthFirstDate = DateFormat("MMM").format(selectedDate!);
+        yearFirstDate = DateFormat("yyyy").format(selectedDate!);
         if (isWithoutDialog!) {
           done!(selectedDates, blackoutDates, blackoutDays, blackoutMonths);
         }
@@ -387,12 +389,12 @@ class SomeCalendarState extends State<SomeCalendar> {
       generateListDateRange();
       selectedDates!.sort((a, b) => a!.compareTo(b!));
       setState(() {
-        dateFirstDate = Jiffy(firstRangeDate).format("dd");
-        monthFirstDate = Jiffy(firstRangeDate).format("MMM");
-        yearFirstDate = Jiffy(firstRangeDate).format("yyyy");
-        dateEndDate = Jiffy(endRangeDate).format("dd");
-        monthEndDate = Jiffy(endRangeDate).format("MMM");
-        yearEndDate = Jiffy(endRangeDate).format("yyyy");
+        dateFirstDate = DateFormat("dd").format(firstRangeDate!);
+        monthFirstDate = DateFormat("MMM").format(firstRangeDate!);
+        yearFirstDate = DateFormat("yyyy").format(firstRangeDate!);
+        dateEndDate = DateFormat("dd").format(endRangeDate!);
+        monthEndDate = DateFormat("MMM").format(endRangeDate!);
+        yearEndDate = DateFormat("yyyy").format(endRangeDate!);
       });
 
       if (isWithoutDialog!) {
@@ -469,7 +471,7 @@ class SomeCalendarState extends State<SomeCalendar> {
     DateTime? date = firstDate;
     for (int i = 0; i < diff; i++) {
       dates.add(date);
-      date = Jiffy(date).add(days: 1) as DateTime;
+      date = date!.add(Duration(days: 1));
     }
     return dates;
   }
@@ -508,7 +510,7 @@ class SomeCalendarState extends State<SomeCalendar> {
       var date = firstRangeDate;
       for (int i = 0; i < diff; i++) {
         selectedDates!.add(date);
-        date = Jiffy(date).add(days: 1) as DateTime;
+        date = date?.add(Duration(days: 1));
       }
     }
   }
@@ -522,25 +524,22 @@ class SomeCalendarState extends State<SomeCalendar> {
       if (pagesCount! <= 1) {
         pageEndDate = lastDate;
       } else {
-        var last = Jiffy(DateTime(startDate!.year, startDate!.month))
-          ..add(months: 1);
-        var lastDayOfMonth = last..subtract(days: 1);
-        pageEndDate = lastDayOfMonth.dateTime;
+        var last =
+            DateTime(startDate!.year, startDate!.month).add(Duration(days: 30));
+        var lastDayOfMonth = last.subtract(Duration(days: 1));
+        pageEndDate = lastDayOfMonth;
       }
     } else if (position == pagesCount! - 1) {
-      var start = Jiffy(DateTime(lastDate!.year, lastDate!.month))
-        ..subtract(months: 1);
-      pageStartDate = start.dateTime;
-      pageEndDate = Jiffy(lastDate).subtract(days: 1) as DateTime;
+      var start =
+          DateTime(lastDate!.year, lastDate!.month).add(Duration(days: -30));
+      pageStartDate = start;
+      pageEndDate = lastDate?.subtract(Duration(days: 1));
     } else {
-      var firstDateOfCurrentMonth =
-          Jiffy(DateTime(startDate!.year, startDate!.month))
-            ..add(months: position);
-      pageStartDate = firstDateOfCurrentMonth.dateTime;
-      var a = firstDateOfCurrentMonth
-        ..add(months: 1)
-        ..subtract(days: 1);
-      pageEndDate = a.dateTime;
+      var firstDateOfCurrentMonth = DateTime(startDate!.year, startDate!.month)
+          .add(Duration(days: position * 30));
+      pageStartDate = firstDateOfCurrentMonth;
+      var a = firstDateOfCurrentMonth.add(Duration(days: 29));
+      pageEndDate = a;
     }
     return SomeDateRange(pageStartDate, pageEndDate);
   }
@@ -861,11 +860,13 @@ class SomeCalendarState extends State<SomeCalendar> {
             Row(
               children: <Widget>[
                 Expanded(
-                  child: RaisedButton(
-                    elevation: 0,
-                    color: primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(18)),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
                     ),
                     onPressed: () {
                       if (mode == SomeMode.Multi || mode == SomeMode.Range) {
@@ -890,11 +891,13 @@ class SomeCalendarState extends State<SomeCalendar> {
                     ),
                   ),
                 ),
-                RaisedButton(
-                  elevation: 0,
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();

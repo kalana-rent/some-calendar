@@ -10,7 +10,7 @@ class MainSingleWithoutDialog extends StatefulWidget {
 
 class _MainSingleWithoutDialogState extends State<MainSingleWithoutDialog> {
   DateTime selectedDate = DateTime.now();
-  List<DateTime> selectedDates = List();
+  List<DateTime> selectedDates = [];
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -33,8 +33,8 @@ class _MainSingleWithoutDialogState extends State<MainSingleWithoutDialog> {
                   mode: SomeMode.Single,
                   isWithoutDialog: true,
                   selectedDate: selectedDate,
-                  startDate: Jiffy().startOf(Units.DAY),
-                  lastDate: Jiffy(Jiffy().add(months: 13)).startOf(Units.MONTH),
+                  startDate: DateTime.now(),
+                  lastDate: DateTime.now().add(Duration(days: 365)),
                   scrollDirection: Axis.horizontal,
                   done: (selectedDates, blackoutDates, blackoutDays,
                       blackoutMonths) {
@@ -59,7 +59,7 @@ class _MainSingleWithoutDialogState extends State<MainSingleWithoutDialog> {
   }
 
   void showSnackbar(String x) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(x),
     ));
   }
